@@ -9,7 +9,8 @@ import { Token } from '@angular/compiler';
 @Component({
   selector: 'modulo',
   templateUrl: './modulo.component.html',
-  styleUrls: ['./modulo.component.scss']
+  styleUrls: ['./modulo.component.scss'],
+  standalone: false
 })
 export class ModuloComponent implements OnInit {
   activoMenu: boolean;

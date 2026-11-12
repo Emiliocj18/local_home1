@@ -10,7 +10,8 @@ import { SigespService } from 'sigesp';
 @Component({
   selector: 'loginForm',
   templateUrl: './form.component.html',
-  styleUrls: ['./form.component.scss']
+  styleUrls: ['./form.component.scss'],
+  standalone: false
 })
 export class FormComponent implements OnInit {
   public mensaje: string='';
