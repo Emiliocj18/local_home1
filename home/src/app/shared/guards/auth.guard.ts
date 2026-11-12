@@ -1,9 +1,22 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
 import { LocalService } from 'src/app/core/services/sigesp.service';
+//import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+//import { Observable } from 'rxjs';
 
-@Injectable({
+export const authGuard: CanActivateFn = () => {
+  const router = inject(Router);
+  const sigesp = inject(LocalService);
+  if (!sigesp.sesionActiva()) { router.navigate(['/auth/login']); return false; }
+  return true;
+};
+
+//Actualizar import en home-routing.module.ts y profile-routing.module.ts
+
+
+//Anteriormente
+
+/*@Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
@@ -23,4 +36,4 @@ export class AuthGuard implements CanActivate {
     }
   }
 
-}
+}*/

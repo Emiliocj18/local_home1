@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import { SessionGuard } from 'src/app/shared/guards/session.guard';
+import { sessionGuard } from 'src/app/shared/guards/session.guard';
 import { RegisterComponent } from './register/register.component';
 
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent, canActivate:[SessionGuard] },
-  { path: 'sign-up', component: RegisterComponent, canActivate:[SessionGuard] },
+  { path: 'login', component: LoginComponent, canActivate:[sessionGuard] },
+  { path: 'sign-up', component: RegisterComponent, canActivate:[sessionGuard] },
   { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];
 
