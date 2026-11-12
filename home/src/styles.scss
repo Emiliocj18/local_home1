@@ -1,0 +1,153 @@
+/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+@import '@angular/material/theming';
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~ngx-toastr/toastr.css';
+
+@font-face {
+  font-family: 'Fira Sans';
+  src: url(assets/fonts/FiraSans-Regular.ttf);
+}
+
+body{
+  margin: 0;
+  background: #ffffff;
+}
+
+*{
+  font-family: 'Fira Sans', sans-serif;
+}
+
+$mat-myapp-primary: (
+  50 : #e1e7ec,
+  100 : #b5c3d0,
+  200 : #839bb1,
+  300 : #517392,
+  400 : #2c557a,
+  500 : #073763,
+  600 : #06315b,
+  700 : #052a51,
+  800 : #042347,
+  900 : #021635,
+  A100 : #6d97ff,
+  A200 : #3a73ff,
+  A400 : #074fff,
+  A700 : #0044ec,
+  contrast: (
+      50 : #000000,
+      100 : #000000,
+      200 : #000000,
+      300 : #ffffff,
+      400 : #ffffff,
+      500 : #ffffff,
+      600 : #ffffff,
+      700 : #ffffff,
+      800 : #ffffff,
+      900 : #ffffff,
+      A100 : #000000,
+      A200 : #ffffff,
+      A400 : #ffffff,
+      A700 : #ffffff,
+  )
+);
+
+
+$mat-myapp-accent: (
+  50 : #e2e7e8,
+  100 : #b6c2c5,
+  200 : #869a9e,
+  300 : #557177,
+  400 : #30525a,
+  500 : #0c343d,
+  600 : #0a2f37,
+  700 : #08272f,
+  800 : #062127,
+  900 : #03151a,
+  A100 : #58cfff,
+  A200 : #25c1ff,
+  A400 : #00acf1,
+  A700 : #009ad8,
+  contrast: (
+      50 : #000000,
+      100 : #000000,
+      200 : #000000,
+      300 : #ffffff,
+      400 : #ffffff,
+      500 : #ffffff,
+      600 : #ffffff,
+      700 : #ffffff,
+      800 : #ffffff,
+      900 : #ffffff,
+      A100 : #000000,
+      A200 : #000000,
+      A400 : #000000,
+      A700 : #ffffff,
+  )
+);
+
+$primary: mat.define-palette($mat-myapp-primary);
+$accent: mat.define-palette($mat-myapp-accent);
+
+$theme: mat.define-light-theme($primary, $accent);
+
+@include mat.all-component-themes($theme);
+
+.mainColor{
+ // background: #073763 ;
+  color: white;
+  background: url("../../../assets/img/home/barra-menu.jpg"); 
+  background-size: cover;
+  -moz-background-size: cover;
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+}
+
+.mainColorText{
+  color: #073763 !important;
+  background: white !important;;
+}
+
+.secondaryColor{
+  background: #094d8c ;
+  color: white;
+}
+
+.title{
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.flex{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.justify-content-center{
+  justify-content: center;
+}
+
+.align-items-center{
+  align-items: center;
+}
+
+html, body { height: 100%; }
+
+.pageContent{
+  padding: 15px 60px;
+}
+
+.pageContentSmall{
+  padding: 15px 60px 15px 15px;
+}
+
+.cardTitle{
+  @extend .secondaryColor;
+  margin: -16px -16px 16px !important;
+  padding: 16px;
+  border-radius: 5px 5px 0px 0px;
+  text-align: center;
+  h2{
+    margin: 0;
+  }
+}

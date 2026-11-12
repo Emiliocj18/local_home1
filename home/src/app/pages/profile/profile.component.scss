@@ -1,0 +1,51 @@
+form{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    align-items: center;
+    mat-form-field{
+        width: 100%;
+    }
+}
+
+.content{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 15px;
+    .pic{
+        text-align: center;
+        img{
+            max-width: 100%;
+        }
+        p{
+            margin: 15px 0 0 0;
+            line-break: anywhere;
+        }
+        input[type*="file"] {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+        label[for="inputFile"] {
+            font-size: 14px;
+            font-weight: 500;
+            color: #094d8c;
+            border: 1px solid #094d8c; 
+            line-height: 34px;
+            background: transparent;
+            box-sizing: border-box;
+            outline: 0;
+            display: inline-block;
+            transition: all .5s;
+            cursor: pointer;
+            padding: 0px 15px !important;
+            text-transform: uppercase;
+            width: fit-content;
+            text-align: center;
+            margin: 15px 0 0 0;
+          }
+    }
+}

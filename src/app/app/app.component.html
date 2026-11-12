@@ -1,0 +1,91 @@
+<div class="layout">
+
+  <ng-container [ngTemplateOutlet]="logged" *ngIf="usuario; else notLogged"></ng-container>
+
+  <footer class="mainColor">
+    <h6>{{ sistema | uppercase }}</h6>   
+  </footer>
+</div>
+
+<ng-template #logged >
+  <header class="mainColor loggedHeader" >
+    <button type="button"
+    aria-label="Toggle sidenav"
+    mat-icon-button
+    (click)="sidenav.toggle()">
+      <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+    </button>
+    <h1 class="title"> {{ titulo | uppercase }} </h1>
+    <div class="userData" >
+      <img [src]="imgSrc+usuario.foto">
+      <h3>{{nombre | uppercase}}</h3>
+    </div>
+    <button type="button"
+    aria-label="Toggle sidenav"
+    mat-icon-button
+    (click)="cerrarSesion()">
+      <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
+    </button>
+  </header>
+
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav mode="side" class="sidenav" opened>
+      <mat-nav-list>
+        <mat-accordion>
+          <ng-container *ngFor="let r of rutas">
+            <ng-container *ngIf="r.children.length > 0">
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <a>
+                    <mat-icon class="mainColorText">{{ r.icon }}</mat-icon>
+                    
+                  </a>
+                </mat-expansion-panel-header>
+                <ng-container *ngFor="let h of r.children">
+                  <a [routerLink]="h.url"
+                  class="item subItem">
+                    <mat-icon class="mainColorText">{{ h.icon }}</mat-icon>
+                    {{ h.name }}
+                  </a>
+                </ng-container>
+              </mat-expansion-panel>
+            </ng-container>
+            <ng-container *ngIf="r.children.length == 0">
+              <ng-container *ngIf="!r.externalLink">
+                <a [routerLink]="r.url"
+                class="item">
+                  <mat-icon matTooltip="{{ r.name | uppercase}}" matTooltipPosition="right"  class="mainColorText">{{ r.icon }}</mat-icon>
+                </a>
+              </ng-container>
+              <ng-container *ngIf="r.externalLink">
+                <a class="item" (click)="openModule(r)">
+                  <mat-icon class="mainColorText">{{ r.icon }}</mat-icon>
+                  {{ r.name }}
+                </a>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+
+        </mat-accordion>
+
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div class="content">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-template>
+
+<ng-template #notLogged>
+  <header class="mainColor notLogged">
+    <h1 class="title">{{ titulo | uppercase }}</h1>
+  </header>
+
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+</ng-template>
+
+

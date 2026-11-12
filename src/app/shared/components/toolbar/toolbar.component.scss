@@ -1,0 +1,26 @@
+button{
+  border: none;
+  padding: 0  ;
+  background: none;
+}
+
+.mat-mdc-button, .mat-mdc-unelevated-button, .mat-mdc-icon-button, .mat-mdc-outlined-button{
+  padding: 5px 0px !important;
+  min-width: 45px !important;
+  border-radius: 0px !important;
+}
+
+.buttons{
+  display: flex;
+  flex-direction: column;
+  width: 45px;
+  background: rgba(81,115,146, .3);
+  position: fixed;
+  right: 0;
+  border-top-left-radius: .25rem;
+  border-bottom-left-radius: .25rem;
+  overflow: hidden;
+  transition-duration: .2s;
+  transition-property: all;
+  transition-timing-function: ease-out;
+}

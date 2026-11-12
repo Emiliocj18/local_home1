@@ -1,0 +1,27 @@
+
+<div class="home">
+  <mat-accordion >
+    <div *ngIf="activoMenu">
+    <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title class="title">
+            <div class="flex align-items-center tituloModulo">
+              <mat-icon class="mainColorText">assessment</mat-icon> Módulos del Sistema
+            </div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="listaModulo">       
+          <div *ngFor="let menu1 of menu">
+            <modulo [nombre]="menu1.nombreSistema"
+            [icono]="menu1.imagenSistema"
+            [ruta]="menu1.ruta"></modulo>
+          </div>          
+        </div>     
+
+    </mat-expansion-panel>
+    </div>
+  </mat-accordion>
+
+</div>
+

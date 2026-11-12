@@ -1,0 +1,55 @@
+.loginPage{
+    display: flex;
+    padding: 30px;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 181px);
+}
+
+.loginPanel{
+    background:white;
+    min-width: 600px;
+    padding: 15px;
+    border-radius: .25rem;
+}
+
+ 
+.fields{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px; 
+}
+
+.mat-mdc-form-field{
+    width: 100%;
+    // margin-bottom: 5px;
+}
+
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+.mat-form-field-wrapper {
+    padding-bottom: 5px;
+}
+ 
+button{
+    display: block;
+    margin: 0 auto;
+}
+
+.loading{ 
+    margin: 50px 0;
+}
+
+.error{
+    margin: 0 0 30px;
+    text-align: center;
+    color: #f44336;
+}
+
+a{
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+    display: block;
+    margin-top: 15px;
+    font-size: 13px;
+}

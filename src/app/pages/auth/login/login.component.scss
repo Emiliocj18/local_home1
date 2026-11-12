@@ -1,0 +1,42 @@
+.grid1{
+	display: grid;
+	grid-template-columns: 70% 30%;
+}
+.loginPage{
+  display: flex;
+  padding: 30px;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 181px);
+  //background: url("../../../../../../../assets/img/home/background-login.jpg"); 
+  background: url("../../../../assets/images/background-login.jpg");
+  background-size: cover;
+  -moz-background-size:cover;
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+}
+
+.loginPanel{
+  background:white; 
+  padding: 30px;
+  //border-radius: .25rem;
+}
+
+.font{
+  padding-top: 50px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 10px;
+  text-align: center;
+  
+}
+.font2{
+  padding-bottom: 50px;
+  padding-left: 50px;
+  padding-right: 50px;
+  text-align: center;
+  color: rgb(28, 4, 90);
+  
+}
+
+

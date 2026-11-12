@@ -1,0 +1,33 @@
+.modulo{
+  color: black;
+  text-decoration: none;
+  border: 1px solid lightgrey;
+  border-radius: .25rem;
+  transition-duration: .3s;
+  transition-property: all;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  height: calc(100% - 32px);
+  cursor: pointer;
+  .mat-icon{
+    height: 80px;
+    width: 80px;
+    font-size: 80px;
+  }
+  h6{
+    margin: 15px 0 0;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .mat-icon, h6{
+    user-select: none;
+  }
+  &:hover {
+    box-shadow: 0px 0px 3px 0px #073763;
+    border-color: #073763;
+  }
+}

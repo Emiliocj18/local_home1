@@ -1,0 +1,53 @@
+.listaModulo{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.tituloModulo{
+  .mat-icon{
+    margin-right: 25px;
+  }
+}
+
+.home{
+  padding: 15px;  
+  min-height: calc(100vh - 121px);
+  background: url("../../../../../assets/img/home/background.jpg"); 
+  background-size: cover;
+  -moz-background-size: cover;
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+}
+
+
+
+
+mat-expansion-panel{
+  border-radius: 0 !important;
+  margin: 0 !important;
+  &:first-of-type{
+    border-radius: .25rem .25rem 0 0 !important;
+  }
+  &:last-of-type{
+    border-radius:  0 0 0.25rem .25rem !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .listaModulo{
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 875px) {
+  .listaModulo{
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .listaModulo{
+    grid-template-columns: 1fr;
+  }
+}

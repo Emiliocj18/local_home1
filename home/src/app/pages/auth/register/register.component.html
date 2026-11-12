@@ -1,0 +1,103 @@
+<div class="loginPage">
+    <div class="loginPanel">
+        
+        <ng-container *ngIf="loaded; else loading">
+            <form class="fond" [formGroup]="signUpForm">
+          
+                <mat-form-field appearance="outline">
+                    <mat-label>Seleccionar Empresa:</mat-label>
+                    <mat-icon matSuffix>storage</mat-icon>
+                    <mat-select matInput formControlName="selectdb" required>
+                    <mat-option *ngFor="let db of basesDeDatos" [value]="db">{{db.nombre}}
+                    </mat-option>
+                    </mat-select>
+                    <!--<mat-error *ngIf="f_login.controls['selectdb'].hasError('required')">Por favor, Seleccione la Empresa!
+                    </mat-error>-->
+                </mat-form-field>
+            
+                <div class="fields">
+                    <mat-form-field>
+                        <mat-label>Nombre:</mat-label>
+                        <input formControlName="name" matInput required>
+                        <mat-error *ngIf="signUpForm.controls['name'].valid && signUpForm.controls['name'].touched">
+                        Debe ingresar su nombre!
+                        </mat-error>
+                    </mat-form-field>
+                
+                    <mat-form-field>
+                        <mat-label>Apellido:</mat-label>
+                        <input formControlName="lastname" matInput required>
+                        <mat-error *ngIf="!signUpForm.controls['lastname'].valid && signUpForm.controls['lastname'].touched">
+                        Debe ingregar su apellido!
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Usuario:</mat-label>
+                        <input formControlName="username" matInput required>
+                        <mat-error *ngIf="signUpForm.controls['username'].valid &&signUpForm.controls['username'].touched">
+                        Debe ingresar su nombre de usuario!
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Cédula:</mat-label>
+                        <input formControlName="id" matInput required>
+                        <mat-error *ngIf="signUpForm.controls['id'].valid &&signUpForm.controls['id'].touched">
+                        Debe ingresar su cédula!
+                        </mat-error>
+                    </mat-form-field>
+                
+                    <mat-form-field>
+                        <mat-label>Contraseña:</mat-label>
+                        <input formControlName="password" matInput required [type]="hide ? 'password' : 'text'">
+                        <mat-icon mat-icon-button matSuffix
+                        (click)="hide = !hide"
+                        [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide">
+                        {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        <mat-error *ngIf="!signUpForm.controls['password'].valid && signUpForm.controls['password'].touched">
+                        Debe ingregar su contraseña!
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Verificar Contraseña:</mat-label>
+                        <input formControlName="passver" matInput placeholder="Contraseña" required [type]="hide ? 'password' : 'text'">
+                        <mat-icon mat-icon-button matSuffix
+                        (click)="hide = !hide"
+                        [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide">
+                        {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        <mat-error *ngIf="signUpForm.controls['passver'].value != signUpForm.controls['password'].value && signUpForm.controls['passver'].touched">
+                        Debe Ingregar la contraseña!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+          
+                <p class="error" *ngIf="showError">El usuario o la clave son incorrectos</p>
+          
+                <div class="flex justify-content-center">
+                    <button [disabled]="!signUpForm.valid || sending"
+                    mat-raised-button color="primary"
+                    (click)="login()">
+                    <mat-icon>done</mat-icon>Ingresar
+                    </button>
+                </div>
+
+                <a [routerLink]="['/auth/login']" routerLinkActive="router-link-active"
+                class="mainColorText">
+                    ¿Ya tienes una cuenta? Inicia sesión.
+                </a>
+          
+            </form>
+        </ng-container>
+          
+    </div>
+</div>
+    
+<ng-template #loading>
+    <div class="flex justify-content-center loading">
+    <mat-spinner></mat-spinner>
+    </div>
+</ng-template>

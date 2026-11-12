@@ -1,0 +1,70 @@
+
+<div class="home">
+ 
+
+  <mat-accordion >
+    <div *ngIf="activoMenu">
+      <mat-expansion-panel >
+          <mat-expansion-panel-header>
+            <mat-panel-title class="title">
+              <div class="flex align-items-center tituloModulo">
+                <mat-icon class="mainColorText">assessment</mat-icon> Módulos Principales
+              </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="listaModulo">       
+            <div *ngFor="let menu1 of principal">
+              <modulo [nombre]="menu1.nombreSistema"
+              [icono]="menu1.imagenSistema"
+              [ruta]="menu1.ruta"></modulo>
+            </div>          
+          </div>
+        
+
+      </mat-expansion-panel>
+
+      <!-- <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title class="title">
+            <div class="flex align-items-center tituloModulo">
+              <mat-icon class="mainColorText">storage</mat-icon> Módulos Auxiliares
+            </div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+          <div class="listaModulo">       
+            <div *ngFor="let menu2 of auxiliar">
+              <modulo [nombre]="menu2.nombreSistema"
+              [icono]="menu2.imagenSistema"
+              [ruta]="menu2.ruta"></modulo>
+            </div>          
+          </div>
+        
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title class="title">
+            <div class="flex align-items-center tituloModulo">
+              <mat-icon class="mainColorText">build</mat-icon> Herramientas del Sistema
+            </div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="listaModulo">
+          
+            <div *ngFor="let menu3 of configuracion">
+              <modulo [nombre]="menu3.nombreSistema"
+              [icono]="menu3.imagenSistema"
+              [ruta]="menu3.ruta"></modulo>
+            </div>          
+        
+        </div>
+
+      </mat-expansion-panel> -->
+    </div>
+  </mat-accordion>
+
+</div>
+
