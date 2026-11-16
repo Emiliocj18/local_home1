@@ -4,13 +4,15 @@
     <mat-form-field appearance="outline"> 
       <mat-label>Seleccionar Empresa:</mat-label>
       <mat-icon matSuffix>storage</mat-icon>
-      <mat-select matInput formControlName="selectdb" required>
-        <mat-option *ngFor="let db of basesDeDatos" [value]="db">{{db.nombre}}
+      <mat-select matInput formControlName="connectionId" required>
+        <mat-option *ngFor="let system of systems" [value]="system.id">{{system.name}}
         </mat-option>
       </mat-select>
-      <!--<mat-error *ngIf="f_login.controls['selectdb'].hasError('required')">Por favor, Seleccione la Empresa!
+      <!--<mat-error *ngIf="f_login.controls['connectionId'].hasError('required')">Por favor, Seleccione la Empresa!
       </mat-error>-->
     </mat-form-field>
+
+    <p class="error" *ngIf="systemsError">{{systemsError}}</p>
 
     <mat-form-field appearance="outline">
       <mat-label>Usuario:</mat-label>
@@ -57,4 +59,3 @@
     <mat-spinner></mat-spinner>
   </div>
 </ng-template>
-

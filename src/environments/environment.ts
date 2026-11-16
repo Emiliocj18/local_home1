@@ -9,6 +9,7 @@ export const environment = {
   href: "http://localhost",
   fuentes_php:'/php',              
   carpeta: "", //siempre debe ir en ""
+  apiUrl: "http://localhost:3000", //backend NestJS (sigesp_management)
 };
 
 /*

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import { sessionGuard } from 'src/app/shared/guards/session.guard';
+import { sessionGuard } from '@core/auth/auth.guard';
 import { RegisterComponent } from './register/register.component';
 
 

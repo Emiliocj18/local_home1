@@ -1,12 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
-import { MUserDetail, SigespService, MUsuario } from 'sigesp';
-//import { MUsuario } from '@core/models/usuario.model';
-import { LocalService } from '@core/services/sigesp.service'
-import { AuthService } from '@core/services/auth.service';
-import { environment } from 'src/environments/environment';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
+import { MUserDetail } from 'sigesp';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
-import { AppComponent } from 'src/app/app/app.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -18,11 +14,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private sanitizer: DomSanitizer,
-    private auth: AuthService,
-    private local: LocalService,
     private fb: UntypedFormBuilder,
-    private _app: AppComponent,
-    private sigesp: SigespService
   ) { }
   public href = environment.href;
   public showPassword: boolean = false;
@@ -35,12 +27,15 @@ export class ProfileComponent implements OnInit {
   public srcBase64: string = null;
 
   ngOnInit() {
-    this.baseSrc = environment.production ?   
-      this.href + '/assets/foto_personal/':   
+    this.baseSrc = environment.production ?
+      this.href + '/assets/foto_personal/':
       environment.url + '/assets/foto_personal/';
 
+    // TODO-MIGRACION (§7.3): el perfil depende de usuario_dao.php. Se deshabilita
+    // hasta exponer get/PUT/foto en NestJS.
+    /*
     this.auth.getUserById(this.local.usuario.id).subscribe(res => {
-      this.user = res.data 
+      this.user = res.data
       this.imgSrc = this.baseSrc + this.user.photo
       this.form = this.fb.group({
         nom: [this.user.name, [Validators.required, Validators.maxLength(80)]],
@@ -50,6 +45,7 @@ export class ProfileComponent implements OnInit {
         ema: [this.user.email, [Validators.required, Validators.maxLength(100)]],
       })
     })
+    */
   }
 
   public onChangeInput(evt) {
@@ -73,14 +69,13 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  public save(){
-   
+  public save() {
+    // TODO-MIGRACION (§7.3): updateUser contra usuario_dao.php deshabilitado.
+    /*
     if(this.user.identification != null){
-          this.auth.updateUser(this.form,  this.user, 
-        this.srcBase64
-      ).subscribe(res => {
+      this.auth.updateUser(this.form, this.user, this.srcBase64).subscribe(res => {
         this.user = res.data;
-        var user: MUsuario = this.local.usuario; 
+        var user: MUsuario = this.local.usuario;
         user.foto = this.user.photo;
         user.nombre = `${this.user.name} ${this.user.lastName}`;
         this.local.guardarUsuario(user);
@@ -88,9 +83,7 @@ export class ProfileComponent implements OnInit {
         this.sigesp.showToastSuccess("Perfil actualizado exitosamente");
       })
     }
-   
+    */
   }
-
-   
 
 }

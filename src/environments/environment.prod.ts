@@ -16,5 +16,7 @@ export const environment = {
   href: ip+carpeta_base,
   carpeta: carpeta_base,
   sistema:sistema,
-  fuentes_php:fuentes_php
+  fuentes_php:fuentes_php,
+  // TODO-MIGRACION: cambiar por la URL del backend NestJS desplegado (HTTPS).
+  apiUrl: "http://localhost:3000"
 };

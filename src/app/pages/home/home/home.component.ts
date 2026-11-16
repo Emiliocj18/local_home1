@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ModuleManagerService } from '@core/services/module-manager.service';
-import { LocalService } from '@core/services/sigesp.service';
-import { MUsuarioSistema, SigespService } from 'sigesp';
-import { environment } from 'src/environments/environment'
+import { MUsuarioSistema } from 'sigesp';
+// TODO-MIGRACION (§7.1): servicios PHP del menu deshabilitados temporalmente.
+// import { ModuleManagerService } from '@core/services/module-manager.service';
+// import { LocalService } from '@core/services/sigesp.service';
+// import { SigespService } from 'sigesp';
+// import { environment } from 'src/environments/environment'
 
 @Component({
   selector: 'app-home',
@@ -11,62 +13,40 @@ import { environment } from 'src/environments/environment'
   standalone: false
 })
 export class HomeComponent implements OnInit {
-  public menu:MUsuarioSistema[]=[];
-  public principal:MUsuarioSistema[]=[];
-  public auxiliar:MUsuarioSistema[]=[];
-  public configuracion:MUsuarioSistema[]=[];
-  public activoMenu: boolean=false;
-  public href = environment.href;
-  public production = environment.production
-  public fuentePhp= environment.fuentes_php;
+  public menu: MUsuarioSistema[] = [];
+  public activoMenu: boolean = false;
 
-  constructor(private sigesp: LocalService, 
-    private sigesp2: SigespService, 
-    private tabManager: ModuleManagerService,
-    ){}
+  constructor() { }
 
   ngOnInit() {
-    this.activoMenu=false;
-    let servidor= this.production ?
-    this.href+this.fuentePhp:
-    environment.url
-    this.getMenu(+this.sigesp.usuario.id,this.sigesp.usuario.token,servidor)
-
+    this.activoMenu = false;
+    // TODO-MIGRACION (§7.1): el menu de sistemas se rehabilita cuando exista el
+    // endpoint Nest equivalente a sistemas_dao.php.
+    // this.getMenu(+this.sigesp.usuario.id, this.sigesp.usuario.token, servidor)
   }
-  mostrarAlert(texto: string){
+
+  /*
+  public mostrarAlert(texto: string){
     alert(texto)
   }
-  
-    private getMenu( id : number,token:any,url:any ) {     
-        return this.sigesp.getPerfilSistema(id,token,url)
-          .subscribe( resp => {       
-            this.menu = resp.data; 
-              this.menu = this.menu.sort((a,b) => {
-                if (+(a.tipoSistema) < +(b.tipoSistema)) return -1
-                if (+(a.tipoSistema) > +(b.tipoSistema)) return 1           
-                return 0
-              })                   
-            this.activoMenu = true;
-            this.menu.findIndex(e=> e.codigoSistema= "INS")>=0? this.ejecutarRelease(id,token,url):'';
-            return resp;                       
-        });
-    } 
 
+  private getMenu( id : number,token:any,url:any ) {
+    return this.sigesp.getPerfilSistema(id,token,url)
+      .subscribe( resp => {
+        this.menu = resp.data;
+        this.menu = this.menu.sort((a,b) => {
+          if (+(a.tipoSistema) < +(b.tipoSistema)) return -1
+          if (+(a.tipoSistema) > +(b.tipoSistema)) return 1
+          return 0
+        })
+        this.activoMenu = true;
+        this.menu.findIndex(e=> e.codigoSistema = "INS")>=0? this.ejecutarRelease(id,token,url):'';
+        return resp;
+    });
+  }
 
-    public ejecutarRelease(id,token,url){
-      this.sigesp.procesarInstala('auto',true, false,id,token,url).subscribe((resp:any)=>{});
-    }
-
-//   private getMenu( id : number,token:any,url:any ) {     
-//     return this.sigesp.getPerfilSistema(id,token,url)
-//       .subscribe( resp => {         
-//           this.menu = resp.data;
-//           this.principal=this.menu.filter(e=>e.tipoSistema==1)
-//           this.auxiliar=this.menu.filter(e=>e.tipoSistema==2)
-//           this.configuracion=this.menu.filter(e=>e.tipoSistema==3)
-//           this.activoMenu = true;
-//           return resp;                       
-//     });
-// } 
-
+  public ejecutarRelease(id,token,url){
+    this.sigesp.procesarInstala('auto',true, false,id,token,url).subscribe((resp:any)=>{});
+  }
+  */
 }

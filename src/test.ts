@@ -7,16 +7,15 @@ import {
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
 
-declare const require: any;
+// El builder de Angular 20 (esbuild) no soporta require.context; se importan
+// los specs explicitamente.
+import './app/core/auth/session.store.spec';
+import './app/core/auth/auth.interceptor.spec';
 
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting(), {
     teardown: { destroyAfterEach: false }
-}
+  }
 );
-// Then we find all the tests.
-const context = require.context('./', true, /\.spec\.ts$/);
-// And load the modules.
-context.keys().map(context);

@@ -1,12 +1,13 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { LocalService } from '../core/services/sigesp.service';
+import { Component, OnInit, HostListener, effect } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { ModuleManagerService } from '@core/services/module-manager.service';
 import { ModuleTabRoute } from '@core/interfaces/interfaces';
 import { environment } from 'src/environments/environment';
-import { MUsuario, MUsuarioSistema, SigespService } from 'sigesp';
-//import { MUsuario } from '@core/models/usuario.model';
+import { MUsuario, MUsuarioSistema } from 'sigesp';
+import { SessionStore } from '../core/auth/session.store';
+import { SessionRefreshService } from '../core/auth/session-refresh.service';
+import { AuthService } from '../core/services/auth/auth.service';
+import { mapToMUsuario } from '../core/mappers/m-usuario.mapper';
 
 @Component({
   selector: 'app-root',
@@ -14,19 +15,19 @@ import { MUsuario, MUsuarioSistema, SigespService } from 'sigesp';
   styleUrls: ['./app.component.scss'],
   standalone: false
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   public usuario: MUsuario;
   public imgSrc: string;
   public prod: boolean = environment.production
-  public sistema:string=environment.sistema;
-  public titulo:string='';
-  public base:string='';
-  public parentesis1:string='';
-  public parentesis2:string='';
-  public  menu: MUsuarioSistema[]=[];
-  public  principal: MUsuarioSistema[]=[];
-  public  auxiliar: MUsuarioSistema[]=[];
-  public  herramienta: MUsuarioSistema[]=[];
+  public sistema: string = environment.sistema;
+  public titulo: string = '';
+  public base: string = '';
+  public parentesis1: string = '';
+  public parentesis2: string = '';
+  public menu: MUsuarioSistema[] = [];
+  public principal: MUsuarioSistema[] = [];
+  public auxiliar: MUsuarioSistema[] = [];
+  public herramienta: MUsuarioSistema[] = [];
   public activoMenu: boolean;
   public nombre: string;
 
@@ -45,85 +46,101 @@ export class AppComponent implements OnInit{
       children: [],
       externalLink: false
     }
-    
-  
+
+
   ]
+
   constructor(
-    private sigesp: LocalService,
     private router: Router,
     private tabManager: ModuleManagerService,
-    private sigespService:SigespService,
-    
-  ) {}
+    private session: SessionStore,
+    private refresh: SessionRefreshService,
+    private auth: AuthService,
+  ) {
+    // La sesion vive en SessionStore; el header se sincroniza de forma reactiva.
+    effect(() => {
+      const user = this.session.user();
+      const token = this.session.token();
 
-  
+      if (user) {
+        this.usuario = mapToMUsuario(user, token ?? '');
+        this.applyUsuario(this.usuario);
+      } else {
+        this.usuario = null;
+        this.titulo = '';
+        this.base = '';
+        this.parentesis1 = '';
+        this.parentesis2 = '';
+      }
+    });
+  }
 
   @HostListener('window:beforeunload', ['$event'])
   beforeUnloadHander(event) {
-      return false;
+    return false;
   }
 
   @HostListener('window:unload', ['$event'])
   unloadHandler(event) {
-
-      this.tabManager.closeAll();
+    this.tabManager.closeAll();
   }
 
   ngOnInit() {
-    
-    if (this.sigesp.sesionActiva()) {
-      this.usuario = this.sigesp.usuario;
-      this.titulo='';
-      this.sistema='';
-      this.base='';
-      this.parentesis1='';
-      this.parentesis2='';  
-      this.titulo=this.usuario.empresa.titulo;
-      this.usuario.sistema=environment.sistema;
-      this.sistema=environment.sistema;
-      this.base=this.usuario.conexionDB.gestor['nombrebase'];
-      this.usuario.nombre=='null'? this.nombre=this.usuario.conexionDB.gestor['l_usuario']:this.nombre=this.usuario.nombre;      
-
-
-    }
     this.imgSrc = environment.production ?
-    window.location.origin + '/'+environment.carpeta+'/assets/foto_personal/':
-    environment.href + '/assets/foto_personal/'
+      window.location.origin + '/' + environment.carpeta + '/assets/foto_personal/' :
+      environment.href + '/assets/foto_personal/'
+  }
+
+  private applyUsuario(usuario: MUsuario) {
+    const gestor = usuario.conexionDB?.gestor as any;
+
+    this.titulo = usuario.empresa?.titulo ?? '';
+    usuario.sistema = environment.sistema;
+    this.sistema = environment.sistema;
+    this.base = gestor?.nombrebase ?? '';
+    this.nombre = (!usuario.nombre || usuario.nombre === 'null')
+      ? gestor?.l_usuario
+      : usuario.nombre;
+    this.parentesis1 = '(';
+    this.parentesis2 = ')';
   }
 
   public guardarUsuario(usuario: MUsuario, iniciarSesion: boolean = false) {
     this.usuario = usuario;
-    if (iniciarSesion) {      
+
+    if (usuario) {
+      this.applyUsuario(usuario);
+    }
+
+    if (iniciarSesion) {
       this.router.navigate(['/home'])
-      this.parentesis1='(';
-      this.parentesis2=')';
-      this.titulo=this.usuario.empresa.titulo;
-      this.usuario.sistema=environment.sistema;
-      this.sistema=environment.sistema;
-      this.usuario.nombre=='null'? this.nombre=this.usuario.conexionDB.gestor['l_usuario']:this.nombre=this.usuario.nombre;      
-      this.base=this.usuario.conexionDB.gestor['nombrebase'];
-      
     }
   }
 
   public cerrarSesion() {
+    this.auth.logout().subscribe({
+      next: () => this.finalizeLogout(),
+      error: () => this.finalizeLogout(),
+    });
+  }
+
+  private finalizeLogout() {
+    this.refresh.cancel();
+    this.session.clear();
+    this.tabManager.closeAll();
     this.usuario = null;
-    this.sigesp.cerrarSesion();
+    this.sistema = environment.sistema;
+    this.titulo = '';
     this.router.navigate(['/auth/login'])
-    this.tabManager.closeAll()
-    this.sistema=environment.sistema;
-    this.titulo='';
-  } 
+  }
 
   public openModule(route: ModuleTabRoute) {
     let json = {
       usuario: this.usuario,
       servidor: this.prod ?
-      window.location.origin :
-      environment.url
+        window.location.origin :
+        environment.url
     }
-
-    
 
     let data = btoa(JSON.stringify(json))
 
@@ -131,9 +148,9 @@ export class AppComponent implements OnInit{
 
     route = {
       name: route.name,
-      url: 
-      this.prod ? href + '/' + route.url + '/auth/redirect?data=' + data 
-      : 'http://localhost:4300/auth/redirect?data=' + data,
+      url:
+        this.prod ? href + '/' + route.url + '/auth/redirect?data=' + data
+          : 'http://localhost:4300/auth/redirect?data=' + data,
       href: this.prod ? href + '/' + route.url : 'http://localhost:4300'
     }
     this.tabManager.addTab(route)

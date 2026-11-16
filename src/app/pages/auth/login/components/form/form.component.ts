@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/core/services/auth.service';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { LocalService } from 'src/app/core/services/sigesp.service';
-import { MConfiguracionDB } from 'src/app/core/models/configuracion-db.model';
-import { AppComponent } from 'src/app/app/app.component';
-import { ToastrService } from 'ngx-toastr';
-import { SigespService } from 'sigesp';
+import { Router } from '@angular/router';
+import { SessionRefreshService } from '@core/auth/session-refresh.service';
+import { SessionStore } from '@core/auth/session.store';
+import { LoginPayload } from '@core/models/login-payload.model';
+import { System } from '@core/models/system.model';
+import { AuthService } from '@core/services/auth/auth.service';
+import { SystemService } from '@core/services/system/system.service';
 
 @Component({
   selector: 'loginForm',
@@ -14,118 +15,110 @@ import { SigespService } from 'sigesp';
   standalone: false
 })
 export class FormComponent implements OnInit {
-  public mensaje: string='';
-
-  constructor(
-    private authService: AuthService,
-    private form: UntypedFormBuilder,
-    private local: LocalService,
-    private _app: AppComponent,
-    private toastr: ToastrService,
-    private sigesp: SigespService
-  ) { }
-
+  public mensaje: string = '';
   public loginForm: UntypedFormGroup = null;
-  public basesDeDatos: MConfiguracionDB[] = [];
+  public systems: System[] = [];
+  public systemsError: string = '';
   public hide: boolean = true;
   public loaded: boolean = false;
   public showError: boolean = false;
   public sending: boolean = false;
 
+  constructor(
+    private authService: AuthService,
+    private form: UntypedFormBuilder,
+    private systemService: SystemService,
+    private session: SessionStore,
+    private refresh: SessionRefreshService,
+    private router: Router,
+  ) { }
+
   ngOnInit() {
     this.loginForm = this.form.group({
+      connectionId: [null, Validators.required],
       usuario: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/[0-9a-zA-Z]{5,}/)]],
-      clave: [null, [Validators.required, Validators.minLength(8)]],
-      selectdb: [null, Validators.required]
+      clave: [null, [Validators.required, Validators.minLength(8)]]
     })
-    this.authService.obtenerConfigDB().subscribe(res=>{
-      this.basesDeDatos = res;
-      this.loaded = true;
-      if(res.length>0){
-        this.loginForm.get('selectdb').setValue(this.basesDeDatos[0]);
-      }
-    })
-  }
 
-  public login(){
-    this.sending = true;
-    this.showError = false;
-    
-    this.authService.logIn(this.loginForm.value).subscribe((res: any) => {
-      if (res.success) {
-        this.local.guardarUsuario(res.data);
-        this._app.guardarUsuario(res.data, true);
-        this.sending = false; 
-      } else {  
-        if(res['resultado']=='error_querynull'){
-          this.mensaje='Error de Conexión';          
-        } else {  
-            this.mensaje='El usuario o la clave son incorrectos';      
-
-            let  newData= { usuario:'NO_AUTORIZADO', clave: 'adminerp', selectdb: this.loginForm.value.selectdb }     
-             
-            this.authService.logIn(newData).subscribe((res: any) => {
-              if (res.success) { 
-                  //this.local.guardarUsuario(res.data);
-                  this.authService.UserNoAuthorized(this.loginForm.value,res.data.token).subscribe(  
-                    (logRes: any) => {   
-
-                      console.log("Log de intento fallido registrado", logRes);
-                    },
-                    (error) => {
-                      console.error("Error al registrar el intento fallido:", error);
-                    }
-                  ); 
-              } //res.sucess                 
-            })
+    this.systemService.getSystems().subscribe({
+      next: (systems) => {
+        this.systems = systems;
+        this.loaded = true;
+        if (systems.length > 0) {
+          this.loginForm.get('connectionId').setValue(systems[0].id);
         }
-        this.showError = true;
-        this.sending = false;
+      },
+      error: (error: Error) => {
+        this.systemsError = error.message;
+        this.loaded = true;
       }
-    })
+    });
   }
 
-   public loginNew(){ 
+  public login() {
+    if (this.loginForm.invalid || this.sending) {
+      return;
+    }
+
     this.sending = true;
     this.showError = false;
 
-    let  newData= { usuario:'', clave: '', selectdb: null }     
+    const values = this.loginForm.getRawValue();
+    const system = this.systems.find((item) => item.id === String(values.connectionId));
 
-    if(this.loginForm.value['usuario']!='SIGESP' && this.loginForm.value['clave']!='adminerp'){
-      newData=this.loginForm.value;
-    }else{
-      newData= { usuario:'NO_AUTORIZADO', clave: 'adminerp', selectdb: this.loginForm.value.selectdb }     
+    if (!system) {
+      this.mensaje = 'Debe seleccionar una empresa.';
+      this.showError = true;
+      this.sending = false;
+      return;
     }
-    
+
+    const payload: LoginPayload = {
+      connectionId: Number(system.id),
+      name: system.name,
+      username: values.usuario,
+      password: values.clave,
+    };
+
+    this.authService.login(payload).subscribe((res) => {
+      this.sending = false;
+
+      if (!res.success || !res.token || !res.usuario) {
+        this.mensaje = res.message ?? 'El usuario o la clave son incorrectos';
+        this.showError = true;
+        return;
+      }
+
+      this.session.set(res.token, res.usuario);
+      this.refresh.arm(res.token);
+      this.router.navigate(['/home']);
+    });
+  }
+
+  // TODO-MIGRACION: logica legacy (NO_AUTORIZADO / adminerp) pendiente de mover al backend.
+  // Se conserva comentada para referencia (§7.5 del plan).
+  /*
+  public loginNew() {
+    this.sending = true;
+    this.showError = false;
+
+    let newData = { usuario: '', clave: '', selectdb: null }
+
+    if (this.loginForm.value['usuario'] != 'SIGESP' && this.loginForm.value['clave'] != 'adminerp') {
+      newData = this.loginForm.value;
+    } else {
+      newData = { usuario: 'NO_AUTORIZADO', clave: 'adminerp', selectdb: this.loginForm.value.selectdb }
+    }
+
     this.authService.logIn(newData).subscribe((res: any) => {
       if (res.success) {
-        this.local.guardarUsuario(res.data);
-        this._app.guardarUsuario(res.data, true);
-        this.sending = false; 
-      } else {  
-        if(res['resultado']=='error_querynull'){
-          this.mensaje='Error de Conexión';          
-        } else {
-            this.mensaje='El usuario o la clave son incorrectos';        
-            this.authService.logIn(newData).subscribe((res: any) => {
-              if (res.success) { 
-                 this.authService.UserNoAuthorized(this.loginForm.value, res.data.token).subscribe(
-                    (logRes: any) => {
-                      console.log("Log de intento fallido registrado", logRes);
-                    },
-                    (error) => {
-                      console.error("Error al registrar el intento fallido:", error);
-                    }
-                  ); 
-              }           
-            })
-        }
+        this.sending = false;
+      } else {
+        this.mensaje = 'El usuario o la clave son incorrectos';
         this.showError = true;
         this.sending = false;
       }
     })
   }
-
-
-  
+  */
 }

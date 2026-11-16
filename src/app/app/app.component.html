@@ -17,7 +17,7 @@
     </button>
     <h1 class="title"> {{ titulo | uppercase }} </h1>
     <div class="userData" >
-      <img [src]="imgSrc+usuario.foto">
+      <img *ngIf="usuario.foto" [src]="imgSrc+usuario.foto">
       <h3>{{nombre | uppercase}}</h3>
     </div>
     <button type="button"
