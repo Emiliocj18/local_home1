@@ -52,7 +52,12 @@ export class ModuloComponent implements OnInit {
 
 
   public abrirModulo(){
-    
+    // TODO-MIGRACION (§7.4): el SSO de módulos enviaba el Base64 de
+    // LocalService.usuario, que ya no se llena con el backend Nest. Se
+    // rehabilita cuando el redirect acepte el access token.
+    return;
+
+    /*
     if (this.ruta) {
     //  this.sigesp2.getVerificarRelease('RELEASE',).subscribe(resp=>{})
 
@@ -76,6 +81,7 @@ export class ModuloComponent implements OnInit {
       this.tabManager.addTab(win)
 
     }
+    */
   }
 
 }

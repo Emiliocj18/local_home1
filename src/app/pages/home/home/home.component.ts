@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MUsuarioSistema } from 'sigesp';
-// TODO-MIGRACION (§7.1): servicios PHP del menu deshabilitados temporalmente.
-// import { ModuleManagerService } from '@core/services/module-manager.service';
-// import { LocalService } from '@core/services/sigesp.service';
-// import { SigespService } from 'sigesp';
-// import { environment } from 'src/environments/environment'
+import { ToastrService } from 'ngx-toastr';
+import { MenuService } from '@core/services/menu/menu.service';
 
 @Component({
   selector: 'app-home',
@@ -16,37 +13,33 @@ export class HomeComponent implements OnInit {
   public menu: MUsuarioSistema[] = [];
   public activoMenu: boolean = false;
 
-  constructor() { }
+  constructor(
+    private readonly menuService: MenuService,
+    private readonly toastr: ToastrService,
+  ) { }
 
   ngOnInit() {
-    this.activoMenu = false;
-    // TODO-MIGRACION (§7.1): el menu de sistemas se rehabilita cuando exista el
-    // endpoint Nest equivalente a sistemas_dao.php.
-    // this.getMenu(+this.sigesp.usuario.id, this.sigesp.usuario.token, servidor)
+    this.getMenu();
   }
 
-  /*
-  public mostrarAlert(texto: string){
-    alert(texto)
-  }
-
-  private getMenu( id : number,token:any,url:any ) {
-    return this.sigesp.getPerfilSistema(id,token,url)
-      .subscribe( resp => {
-        this.menu = resp.data;
-        this.menu = this.menu.sort((a,b) => {
-          if (+(a.tipoSistema) < +(b.tipoSistema)) return -1
-          if (+(a.tipoSistema) > +(b.tipoSistema)) return 1
-          return 0
-        })
+  private getMenu() {
+    this.menuService.getMenu().subscribe({
+      next: (resp) => {
+        this.menu = resp;
         this.activoMenu = true;
-        this.menu.findIndex(e=> e.codigoSistema = "INS")>=0? this.ejecutarRelease(id,token,url):'';
-        return resp;
+      },
+      error: (error: unknown) => {
+        this.activoMenu = false;
+        const message =
+          error instanceof Error
+            ? error.message
+            : 'No se pudieron cargar los módulos.';
+        this.toastr.error(message, 'Menú de sistemas');
+      },
     });
   }
 
-  public ejecutarRelease(id,token,url){
-    this.sigesp.procesarInstala('auto',true, false,id,token,url).subscribe((resp:any)=>{});
-  }
-  */
+  // TODO-MIGRACION (§7.3): el flujo de release (sistema INS) depende de
+  // instala_dao.php y se reactivará en una fase aparte.
+  // public ejecutarRelease() { ... }
 }

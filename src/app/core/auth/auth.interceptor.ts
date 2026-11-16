@@ -20,10 +20,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
-  const token = session.token();
-  const authReq = req.clone({
-    withCredentials: true,
-    setHeaders: token ? { Authorization: `Bearer ${token}` } : {},
+  const token = session.token(); //Obtiene el token que se guardo en session
+  const authReq = req.clone({// Es una copia de la peticion original con el token y cookies(Se usará en cada petición)
+    withCredentials: true, //Permite enviar y recibir cookies
+    setHeaders: token ? { Authorization: `Bearer ${token}` } : {}, //Añade el header de autorización si hay token
   });
 
   return next(authReq).pipe(

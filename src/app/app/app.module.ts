@@ -21,6 +21,8 @@ import { AuthService } from '../core/services/auth/auth.service';
 import { HttpAuthService } from '../core/services/auth/http-auth.service';
 import { SystemService } from '../core/services/system/system.service';
 import { HttpSystemService } from '../core/services/system/http-system.service';
+import { MenuService } from '../core/services/menu/menu.service';
+import { HttpMenuService } from '../core/services/menu/http-menu.service';
 
 @NgModule({
   declarations: [
@@ -40,6 +42,7 @@ import { HttpSystemService } from '../core/services/system/http-system.service';
     { provide: API_URL, useValue: environment.apiUrl },
     { provide: AuthService, useClass: HttpAuthService },
     { provide: SystemService, useClass: HttpSystemService },
+    { provide: MenuService, useClass: HttpMenuService },
     {
       provide: MAT_DATE_FORMATS,
       useValue: {
