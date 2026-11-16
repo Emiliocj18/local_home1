@@ -42,30 +42,36 @@ export class RegisterComponent implements OnInit {
       passver: ['', [Validators.required, Validators.minLength(8)]],
       selectdb: [null, Validators.required]
     })
-    this.authService.obtenerConfigDB().subscribe(res=>{
-      this.basesDeDatos = res;
-      // console.log(this.basesDeDatos)
-      this.loaded = true;
-    })
+    // TODO-MIGRACION (§7.6): catalogo de BD legacy (config_bd.php) deshabilitado.
+    // Reemplazo: GET /connections/catalogo via SystemService (como en el login).
+    // this.authService.obtenerConfigDB().subscribe(res=>{
+    //   this.basesDeDatos = res;
+    //   // console.log(this.basesDeDatos)
+    //   this.loaded = true;
+    // })
+    this.loaded = true;
   }
 
+  // TODO-MIGRACION (§7.6): registro legacy (sign_up.php + cryptoPassword) sellado.
+  // Reemplazo: endpoint Nest de registro (por crear). Mientras tanto el alta de
+  // cuentas queda deshabilitada; el formulario se conserva como referencia.
   public login(){
-    // this.sending = true; 
-    this.showError = false;
-    this.authService.signUp(this.signUpForm.value).subscribe((res: any) => {
-      // console.log(res)
-      if (res.success) {
-        this.toastr.success("Cuenta creada exitosamente")
-        this.router.navigate(['auth', 'login'])
-        // this.local.guardarUsuario(res.data);
-        // this._app.guardarUsuario(res.data, true);
-        // this.sending = false;
-      } else {
-        this.toastr.error(res.message)
-        // this.showError = true;
-        // this.sending = false;
-      }
-    })
+    // this.sending = true;
+    // this.showError = false;
+    // this.authService.signUp(this.signUpForm.value).subscribe((res: any) => {
+    //   // console.log(res)
+    //   if (res.success) {
+    //     this.toastr.success("Cuenta creada exitosamente")
+    //     this.router.navigate(['auth', 'login'])
+    //     // this.local.guardarUsuario(res.data);
+    //     // this._app.guardarUsuario(res.data, true);
+    //     // this.sending = false;
+    //   } else {
+    //     this.toastr.error(res.message)
+    //     // this.showError = true;
+    //     // this.sending = false;
+    //   }
+    // })
   }
 
 }
