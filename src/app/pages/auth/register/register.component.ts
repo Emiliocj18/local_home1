@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { MConfiguracionDB } from '@core/models/configuracion-db.model';
 import { AuthService } from '@core/services/auth.service';
 import { LocalService } from '@core/services/sigesp.service';
-import { ToastrService } from 'ngx-toastr';
 import { SigespService } from '@emiliocj18/sigesp-core';
 import { AppComponent } from 'src/app/app/app.component';
 
@@ -21,7 +20,6 @@ export class RegisterComponent implements OnInit {
     private form: UntypedFormBuilder,
     private local: LocalService,
     private _app: AppComponent,
-    private toastr: ToastrService,
     private router: Router
   ) { }
 
@@ -61,13 +59,11 @@ export class RegisterComponent implements OnInit {
     // this.authService.signUp(this.signUpForm.value).subscribe((res: any) => {
     //   // console.log(res)
     //   if (res.success) {
-    //     this.toastr.success("Cuenta creada exitosamente")
     //     this.router.navigate(['auth', 'login'])
     //     // this.local.guardarUsuario(res.data);
     //     // this._app.guardarUsuario(res.data, true);
     //     // this.sending = false;
     //   } else {
-    //     this.toastr.error(res.message)
     //     // this.showError = true;
     //     // this.sending = false;
     //   }

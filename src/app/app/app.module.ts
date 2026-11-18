@@ -10,7 +10,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../shared/material/material.module';
-import { ToastrModule } from 'ngx-toastr';
 import { AppModule as SigespModule } from '@emiliocj18/sigesp-core';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { environment } from 'src/environments/environment';
@@ -33,7 +32,6 @@ import { HttpMenuService } from '../core/services/menu/http-menu.service';
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    ToastrModule.forRoot(),
     SigespModule
   ],
   providers: [

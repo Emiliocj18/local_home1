@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MUsuarioSistema } from '@emiliocj18/sigesp-core';
-import { ToastrService } from 'ngx-toastr';
 import { MenuService } from '@core/services/menu/menu.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private readonly menuService: MenuService,
-    private readonly toastr: ToastrService,
+    private readonly snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
@@ -34,8 +34,17 @@ export class HomeComponent implements OnInit {
           error instanceof Error
             ? error.message
             : 'No se pudieron cargar los módulos.';
-        this.toastr.error(message, 'Menú de sistemas');
+        this.showError(`Menú de sistemas: ${message}`);
       },
+    });
+  }
+
+  private showError(message: string) {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 5000,
+      panelClass: 'sigesp-snackbar-error',
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
     });
   }
 
