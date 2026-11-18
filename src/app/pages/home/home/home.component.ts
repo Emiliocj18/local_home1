@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MUsuarioSistema } from 'sigesp';
+import { MUsuarioSistema } from '@emiliocj18/sigesp-core';
 import { ToastrService } from 'ngx-toastr';
 import { MenuService } from '@core/services/menu/menu.service';
 

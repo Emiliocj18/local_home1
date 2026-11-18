@@ -3,7 +3,7 @@ import { LocalService } from '@core/services/sigesp.service';
 import { environment } from 'src/environments/environment';
 import { ModuleTab, ModuleTabRoute } from '@core/interfaces/interfaces';
 import { ModuleManagerService } from '@core/services/module-manager.service';
-import { MUsuarioSistema, SigespService } from 'sigesp';
+import { MUsuarioSistema, SigespService } from '@emiliocj18/sigesp-core';
 import { Token } from '@angular/compiler';
 
 @Component({

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ModuleManagerService } from '@core/services/module-manager.service';
 import { ModuleTabRoute } from '@core/interfaces/interfaces';
 import { environment } from 'src/environments/environment';
-import { MUsuario, MUsuarioSistema } from 'sigesp';
+import { MUsuario, MUsuarioSistema } from '@emiliocj18/sigesp-core';
 import { SessionStore } from '../core/auth/session.store';
 import { SessionRefreshService } from '../core/auth/session-refresh.service';
 import { AuthService } from '../core/services/auth/auth.service';

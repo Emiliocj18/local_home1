@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable, TimeoutError, catchError, map, throwError, timeout } from 'rxjs';
-import { MUsuarioSistema, IUsuarioSistema } from 'sigesp';
+import { MUsuarioSistema, IUsuarioSistema } from '@emiliocj18/sigesp-core';
 import { API_URL } from '@core/config/api.config';
 import { MenuService } from './menu.service';
 

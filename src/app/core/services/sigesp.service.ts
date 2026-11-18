@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { IResponse, MUsuario, MUsuarioSistema, SigespService } from 'sigesp';//'@core/models/usuario.model';
+import { IResponse, MUsuario, MUsuarioSistema, SigespService } from '@emiliocj18/sigesp-core';//'@core/models/usuario.model';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';

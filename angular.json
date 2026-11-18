@@ -27,7 +27,8 @@
               "hammerjs",
               "crypto-js",
               "moment",
-              "CommonJS"
+              "CommonJS",
+              "sweetalert2"
             ],
             "outputPath": "dist/localhost",
             "index": "src/index.html",

@@ -29,7 +29,7 @@ import { Injectable } from '@angular/core';
 // import { Observable } from 'rxjs';
 // import { MConfiguracionDB } from '../models/configuracion-db.model';
 // import { map, retry } from 'rxjs/operators';
-// import { MUsuario, MUserDetail } from 'sigesp';
+// import { MUsuario, MUserDetail } from '@emiliocj18/sigesp-core';
 // import { IResponse } from 'sigesp/lib/core/interfaces/Response';
 // import { LocalService } from './sigesp.service';
 // import { UntypedFormGroup } from '@angular/forms';

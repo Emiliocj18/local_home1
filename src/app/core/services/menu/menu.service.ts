@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { MUsuarioSistema } from 'sigesp';
+import { MUsuarioSistema } from '@emiliocj18/sigesp-core';
 
 // Contrato del menú de sistemas del usuario autenticado (home).
 export abstract class MenuService {

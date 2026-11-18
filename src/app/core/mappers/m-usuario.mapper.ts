@@ -1,5 +1,5 @@
 import { environment } from 'src/environments/environment';
-import { MUsuario } from 'sigesp';
+import { MUsuario } from '@emiliocj18/sigesp-core';
 import { UsuarioConectado } from '@core/models/usuario-conectado.model';
 
 // Adapter UsuarioConectado (Nest) -> MUsuario (modelo usado por AppComponent).

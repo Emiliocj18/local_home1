@@ -5,7 +5,7 @@ import { MConfiguracionDB } from '@core/models/configuracion-db.model';
 import { AuthService } from '@core/services/auth.service';
 import { LocalService } from '@core/services/sigesp.service';
 import { ToastrService } from 'ngx-toastr';
-import { SigespService } from 'sigesp';
+import { SigespService } from '@emiliocj18/sigesp-core';
 import { AppComponent } from 'src/app/app/app.component';
 
 @Component({
