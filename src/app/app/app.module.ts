@@ -8,9 +8,7 @@ import {
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../shared/material/material.module';
-import { AppModule as SigespModule } from '@emiliocj18/sigesp-core';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { environment } from 'src/environments/environment';
 import { API_URL } from '../core/config/api.config';
@@ -30,9 +28,7 @@ import { HttpMenuService } from '../core/services/menu/http-menu.service';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
-    MaterialModule,
-    SigespModule
+    MaterialModule
   ],
   providers: [
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),

@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, effect } from '@angular/core';
+import { Component, OnInit, HostListener, effect, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModuleManagerService } from '@core/services/module-manager.service';
 import { ModuleTabRoute } from '@core/interfaces/interfaces';
@@ -13,6 +13,7 @@ import { mapToMUsuario } from '../core/mappers/m-usuario.mapper';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class AppComponent implements OnInit {
@@ -135,16 +136,16 @@ export class AppComponent implements OnInit {
   }
 
   public openModule(route: ModuleTabRoute) {
-    let json = {
+    const json = {
       usuario: this.usuario,
       servidor: this.prod ?
         window.location.origin :
         environment.url
     }
 
-    let data = btoa(JSON.stringify(json))
+    const data = btoa(JSON.stringify(json))
 
-    let href: string = window.location.origin
+    const href: string = window.location.origin
 
     route = {
       name: route.name,

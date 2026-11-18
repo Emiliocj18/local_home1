@@ -18,7 +18,7 @@ export class LocalService {
   public guardarUsuario(user: MUsuario){
     user.carpeta=this.carpeta;    
     this.usuario = user;
-    let cypher = btoa(JSON.stringify(this.usuario))
+    const cypher = btoa(JSON.stringify(this.usuario))
     sessionStorage.setItem("user", cypher);
     console.log('guardado en sessionStorage');
   }
@@ -30,7 +30,7 @@ export class LocalService {
       } else {
         //esa linea de getItem(user) creo que captura la session storage del usuario activo... 
         //y alli es donde creo que se debe agregar la variable carpeta al token..
-        let activeUser:MUsuario = JSON.parse(atob(sessionStorage.getItem("user")));
+        const activeUser:MUsuario = JSON.parse(atob(sessionStorage.getItem("user")));
         this.guardarUsuario(activeUser);
       }
     }
@@ -95,9 +95,6 @@ export class LocalService {
   }})
    .pipe(  
      map((res: any) => {
-         if (res.success) {
-             res.data = res.data; //.map(element => new MSeguimiento(element));
-         }
          return res
      })
    )

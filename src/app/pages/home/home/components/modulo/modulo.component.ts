@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { LocalService } from '@core/services/sigesp.service';
 import { environment } from 'src/environments/environment';
 import { ModuleTab, ModuleTabRoute } from '@core/interfaces/interfaces';
@@ -10,6 +10,7 @@ import { Token } from '@angular/compiler';
   selector: 'modulo',
   templateUrl: './modulo.component.html',
   styleUrls: ['./modulo.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class ModuloComponent implements OnInit {
@@ -40,7 +41,7 @@ export class ModuloComponent implements OnInit {
 
   ngOnInit() {
     
-    let json = {
+    const json = {
       usuario: this.sigesp.usuario,      
       servidor: this.production ?
       this.href+this.fuentePhp:

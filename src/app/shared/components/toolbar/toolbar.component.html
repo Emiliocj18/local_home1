@@ -1,59 +1,58 @@
 <div class="buttons mainColorText"
-[ngStyle]="{top: (85 - offset) + 'px'}">
+  [ngStyle]="{top: (85 - offset) + 'px'}">
 
-  <ng-container *ngIf="mostrarCrear">
+  @if (mostrarCrear) {
     <button mat-button type="button"
-    class="btn btn-default"
-    (click)="emitNew()"
-    [disabled]="desabilitarCrear">
+      class="btn btn-default"
+      (click)="emitNew()"
+      [disabled]="desabilitarCrear">
       <i class="material-icons">note_add</i>
     </button>
-  </ng-container>
+  }
 
-  <ng-container *ngIf="mostrarGuardar">
+  @if (mostrarGuardar) {
     <button mat-button type="button"
-    class="btn btn-default"
-    (click)="emitSave()"
-    [disabled]="desabilitarGuardar">
+      class="btn btn-default"
+      (click)="emitSave()"
+      [disabled]="desabilitarGuardar">
       <i class="material-icons">save</i>
     </button>
-  </ng-container>
+  }
 
-  <ng-container *ngIf="mostrarBorrar">
+  @if (mostrarBorrar) {
     <button mat-button type="button"
-    class="btn btn-default"
-    (click)="emitDelete()"
-    [disabled]="desabilitarBorrar">
+      class="btn btn-default"
+      (click)="emitDelete()"
+      [disabled]="desabilitarBorrar">
       <i class="material-icons">delete</i>
     </button>
-  </ng-container>
+  }
 
-  <ng-container *ngIf="mostrarBuscar">
+  @if (mostrarBuscar) {
     <button mat-button type="button"
-    class="btn btn-default"
-    (click)="emitSearch()"
-    [disabled]="desabilitarBuscar">
+      class="btn btn-default"
+      (click)="emitSearch()"
+      [disabled]="desabilitarBuscar">
       <i class="material-icons">search</i>
     </button>
-  </ng-container>
+  }
 
-  <ng-container *ngIf="mostrarImprimir">
+  @if (mostrarImprimir) {
     <button mat-button type="button"
-    class="btn btn-default"
-    (click)="emitPrint()"
-    [disabled]="desabilitarImprimir">
+      class="btn btn-default"
+      (click)="emitPrint()"
+      [disabled]="desabilitarImprimir">
       <i class="material-icons">print</i>
     </button>
-  </ng-container>
+  }
 
-  <ng-container *ngIf="mostrarSalir">
+  @if (mostrarSalir) {
     <button mat-button type="button"
-    class="btn btn-default"
-    (click)="emitExit()"
-    [disabled]="desabilitarSalir">
+      class="btn btn-default"
+      (click)="emitExit()"
+      [disabled]="desabilitarSalir">
       <i class="material-icons">power_settings_new</i>
     </button>
-  </ng-container>
+  }
 
 </div>
- 

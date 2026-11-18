@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { MUserDetail } from '@emiliocj18/sigesp-core';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class ProfileComponent implements OnInit {
@@ -49,24 +50,28 @@ export class ProfileComponent implements OnInit {
   }
 
   public onChangeInput(evt) {
-    const image = evt.target.files;
+    const files: FileList = evt.target.files;
 
-    if (image.length > 0) {
-      for (let i = 0, f; f = image[i]; i++) {
-        if (!f.type.match('image.*')) {
-          continue;
-        }
-        this.selectedImage = image[0];
-        var format: string = this.selectedImage.type.replace('image/', '');
-        this.user.photo = `${this.user.identification}.${format}`
-        let reader = new FileReader();
-        reader.onload = (e: any) => {
-          this.srcBase64 = e.target.result;
-        }
-        reader.readAsDataURL(this.selectedImage);
-        this.imgSrc = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.selectedImage))
-      }
+    if (files.length === 0) {
+      return;
     }
+
+    const image = files[0];
+
+    if (!image.type.match('image.*')) {
+      return;
+    }
+
+    this.selectedImage = image;
+    const format = image.type.replace('image/', '');
+    this.user.photo = `${this.user.identification}.${format}`;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.srcBase64 = e.target.result;
+    };
+    reader.readAsDataURL(image);
+    this.imgSrc = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(image));
   }
 
   public save() {

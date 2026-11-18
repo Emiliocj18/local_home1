@@ -1,61 +1,62 @@
-<ng-container *ngIf="loaded; else loading">
+@if (loaded) {
   <form class="fond" [formGroup]="loginForm">
-
-    <mat-form-field appearance="outline"> 
+    <mat-form-field appearance="outline">
       <mat-label>Seleccionar Empresa:</mat-label>
       <mat-icon matSuffix>storage</mat-icon>
       <mat-select matInput formControlName="connectionId" required>
-        <mat-option *ngFor="let system of systems" [value]="system.id">{{system.name}}
-        </mat-option>
+        @for (system of systems; track system) {
+          <mat-option [value]="system.id">{{system.name}}
+          </mat-option>
+        }
       </mat-select>
       <!--<mat-error *ngIf="f_login.controls['connectionId'].hasError('required')">Por favor, Seleccione la Empresa!
-      </mat-error>-->
-    </mat-form-field>
-
-    <p class="error" *ngIf="systemsError">{{systemsError}}</p>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Usuario:</mat-label>
-      <input formControlName="usuario" matInput placeholder="Nombre de Usuario" required>
-      <mat-icon matSuffix>person</mat-icon>
-      <mat-error *ngIf="loginForm.controls['usuario'].valid &&loginForm.controls['usuario'].touched">
+    </mat-error>-->
+  </mat-form-field>
+  @if (systemsError) {
+    <p class="error">{{systemsError}}</p>
+  }
+  <mat-form-field appearance="outline">
+    <mat-label>Usuario:</mat-label>
+    <input formControlName="usuario" matInput placeholder="Nombre de Usuario" required>
+    <mat-icon matSuffix>person</mat-icon>
+    @if (loginForm.controls['usuario'].valid &&loginForm.controls['usuario'].touched) {
+      <mat-error>
         Debe ingresar nombre de usuario!
       </mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Contraseña:</mat-label>
-      <input formControlName="clave" matInput placeholder="Contraseña" required [type]="hide ? 'password' : 'text'">
-      <mat-icon mat-icon-button matSuffix
+    }
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Contraseña:</mat-label>
+    <input formControlName="clave" matInput placeholder="Contraseña" required [type]="hide ? 'password' : 'text'">
+    <mat-icon mat-icon-button matSuffix
       (click)="hide = !hide"
       [attr.aria-label]="'Hide password'"
       [attr.aria-pressed]="hide">
-      {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-      <mat-error *ngIf="!loginForm.controls['clave'].valid && loginForm.controls['clave'].touched">
+    {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+    @if (!loginForm.controls['clave'].valid && loginForm.controls['clave'].touched) {
+      <mat-error>
         Debe Ingregar la contraseña!
       </mat-error>
-    </mat-form-field>
-
-    <p class="error" *ngIf="showError">{{mensaje}}</p>
-
-    <div class="flex justify-content-center">
-      <button [disabled]="!loginForm.valid || sending"
+    }
+  </mat-form-field>
+  @if (showError) {
+    <p class="error">{{mensaje}}</p>
+  }
+  <div class="flex justify-content-center">
+    <button [disabled]="!loginForm.valid || sending"
       mat-raised-button color="primary"
       (click)="login()">
-        <mat-icon>done</mat-icon>Ingresar
-      </button>
-    </div>
-
-    <a [routerLink]="['/auth/sign-up']" routerLinkActive="router-link-active"
+      <mat-icon>done</mat-icon>Ingresar
+    </button>
+  </div>
+  <a [routerLink]="['/auth/sign-up']" routerLinkActive="router-link-active"
     class="mainColorText">
-      ¿No tienes una cuenta? Regístra una nueva.
-    </a>
-
-  </form>
-</ng-container>
-
-<ng-template #loading>
+    ¿No tienes una cuenta? Regístra una nueva.
+  </a>
+</form>
+} @else {
   <div class="flex justify-content-center loading">
     <mat-spinner></mat-spinner>
   </div>
-</ng-template>
+}
+

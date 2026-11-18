@@ -2,6 +2,7 @@ import {
   HttpClient,
   provideHttpClient,
   withInterceptors,
+  withXhr
 } from '@angular/common/http';
 import {
   HttpTestingController,
@@ -13,6 +14,7 @@ import { UsuarioConectado } from '@core/models/usuario-conectado.model';
 import { AuthService } from '@core/services/auth/auth.service';
 import { RefreshResult } from '@core/models/refresh-result.model';
 import { Subject } from 'rxjs';
+import { type Mock } from 'vitest';
 import { authInterceptor } from './auth.interceptor';
 import { SessionStore } from './session.store';
 
@@ -21,7 +23,7 @@ describe('authInterceptor', () => {
   let httpMock: HttpTestingController;
   let session: SessionStore;
   let refreshSubject: Subject<RefreshResult>;
-  let authStub: jasmine.SpyObj<AuthService>;
+  let authStub: { login: Mock; refresh: Mock; logout: Mock };
 
   const user: UsuarioConectado = {
     usuario: 'adminerp',
@@ -34,16 +36,16 @@ describe('authInterceptor', () => {
 
   beforeEach(() => {
     refreshSubject = new Subject<RefreshResult>();
-    authStub = jasmine.createSpyObj<AuthService>('AuthService', [
-      'login',
-      'refresh',
-      'logout',
-    ]);
-    authStub.refresh.and.returnValue(refreshSubject.asObservable());
+    authStub = {
+      login: vi.fn(),
+      refresh: vi.fn(),
+      logout: vi.fn(),
+    };
+    authStub.refresh.mockReturnValue(refreshSubject.asObservable());
 
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(withInterceptors([authInterceptor])),
+        provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
         provideHttpClientTesting(),
         provideRouter([]),
         { provide: AuthService, useValue: authStub },
@@ -101,7 +103,7 @@ describe('authInterceptor', () => {
 
   it('si el refresh falla propaga el error a los suscriptores en espera', () => {
     const router = TestBed.inject(Router);
-    spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
 
     let firstError: unknown = null;
     let secondError: unknown = null;
