@@ -19,7 +19,6 @@ import { mapToMUsuario } from '../core/mappers/m-usuario.mapper';
 export class AppComponent implements OnInit {
   public usuario: MUsuario;
   public imgSrc: string;
-  public prod: boolean = environment.production
   public sistema: string = environment.sistema;
   public titulo: string = '';
   public base: string = '';
@@ -136,25 +135,11 @@ export class AppComponent implements OnInit {
   }
 
   public openModule(route: ModuleTabRoute) {
-    const json = {
-      usuario: this.usuario,
-      servidor: this.prod ?
-        window.location.origin :
-        environment.url
+    if (!environment.ssoEnabled) {
+      return;
     }
-
-    const data = btoa(JSON.stringify(json))
-
-    const href: string = window.location.origin
-
-    route = {
-      name: route.name,
-      url:
-        this.prod ? href + '/' + route.url + '/auth/redirect?data=' + data
-          : 'http://localhost:4300/auth/redirect?data=' + data,
-      href: this.prod ? href + '/' + route.url : 'http://localhost:4300'
-    }
-    this.tabManager.addTab(route)
+    // TODO(SSO): pedir un codigo de un solo uso a Nest y abrir el modulo con
+    // ?code=<code>. No volver a enviar btoa(JSON.stringify(usuario)) por la URL.
   }
 
 }

@@ -10,8 +10,7 @@ export function mapToMUsuario(
   const mapped = new MUsuario();
   mapped.nombre = usuario.nombre;
   mapped.apellido = usuario.apellido;
-  // El contrato de login no expone id_usuario; se completa cuando se migre el perfil.
-  mapped.id = 0;
+  mapped.id = usuario.idUsuario ?? 0;
   mapped.foto = '';
   mapped.token = accessToken;
   mapped.sistema = environment.sistema;

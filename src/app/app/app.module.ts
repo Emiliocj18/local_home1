@@ -20,6 +20,8 @@ import { SystemService } from '../core/services/system/system.service';
 import { HttpSystemService } from '../core/services/system/http-system.service';
 import { MenuService } from '../core/services/menu/menu.service';
 import { HttpMenuService } from '../core/services/menu/http-menu.service';
+import { ProfileService } from '../core/services/profile/profile.service';
+import { HttpProfileService } from '../core/services/profile/http-profile.service';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import { HttpMenuService } from '../core/services/menu/http-menu.service';
     { provide: AuthService, useClass: HttpAuthService },
     { provide: SystemService, useClass: HttpSystemService },
     { provide: MenuService, useClass: HttpMenuService },
+    { provide: ProfileService, useClass: HttpProfileService },
     {
       provide: MAT_DATE_FORMATS,
       useValue: {

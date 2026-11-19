@@ -18,5 +18,12 @@ export const environment = {
   sistema:sistema,
   fuentes_php:fuentes_php,
   // TODO-MIGRACION: cambiar por la URL del backend NestJS desplegado (HTTPS).
-  apiUrl: "http://localhost:3000"
+  apiUrl: "http://localhost:3000",
+  // SSO hacia los modulos SIGESP: desactivado hasta que existan los modulos destino.
+  // TODO(SSO): activar cuando existan los modulos destino.
+  //   1. Implementar en Nest: GET /auth/session y POST /auth/handoff/exchange.
+  //   2. Cada modulo destino canjea el codigo y llama saveUser(payload).
+  //   3. Poner ssoEnabled = true.
+  //   NO reutilizar btoa(JSON.stringify(usuario)): exponia PII y no caducaba.
+  ssoEnabled: false
 };

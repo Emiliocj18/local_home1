@@ -9,7 +9,19 @@
           <h2>Información de Perfil</h2>
         </div>
 
-        @if (user) {
+        @if (loading) {
+          <mat-card-content class="flex justify-content-center loading">
+            <mat-spinner></mat-spinner>
+          </mat-card-content>
+        }
+
+        @if (error) {
+          <mat-card-content>
+            <p class="error">{{ error }}</p>
+          </mat-card-content>
+        }
+
+        @if (form && user) {
           <mat-card-content>
             <form [formGroup]="form">
               <mat-form-field>
@@ -19,87 +31,63 @@
                   [maxlength]="80"
                   formControlName="nom"
                   placeholder="Nombre">
-                </mat-form-field>
-                <mat-form-field>
-                  <input type="text"
-                    formControlName="ape"
-                    [readonly]="true"
-                    [maxlength]="60"
-                    matInput
-                    placeholder="Apellido">
-                  </mat-form-field>
-                  <mat-form-field>
-                    <input type="text"
-                      formControlName="tel"
-                      matInput
-                      [maxlength]="20"
-                      placeholder="Teléfono">
-                      <mat-error>
-                        Campo requerido
-                      </mat-error>
-                    </mat-form-field>
-                    <mat-form-field>
-                      <input type="text"
-                        formControlName="ema"
-                        matInput
-                        [maxlength]="100"
-                        placeholder="Email">
-                        <mat-error>
-                          Campo requerido
-                        </mat-error>
-                      </mat-form-field>
-                      <mat-form-field>
-                        <input type="text"
-                          [matDatepicker]="picker"
-                          formControlName="nac"
-                          [readonly]="true"
-                          matInput
-                          placeholder="Fecha Nacimiento">
-                          <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="true"></mat-datepicker-toggle>
-                          <mat-datepicker #picker [disabled]="true"></mat-datepicker>
-                        </mat-form-field>
-                      </form>
-                    </mat-card-content>
-                  }
+              </mat-form-field>
+              <mat-form-field>
+                <input type="text"
+                  formControlName="ape"
+                  [readonly]="true"
+                  [maxlength]="60"
+                  matInput
+                  placeholder="Apellido">
+              </mat-form-field>
+              <mat-form-field>
+                <input type="text"
+                  formControlName="tel"
+                  matInput
+                  [maxlength]="20"
+                  placeholder="Teléfono">
+                <mat-error>
+                  Campo requerido
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field>
+                <input type="text"
+                  formControlName="ema"
+                  matInput
+                  [maxlength]="100"
+                  placeholder="Email">
+                <mat-error>
+                  Campo requerido
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field>
+                <input type="text"
+                  [matDatepicker]="picker"
+                  formControlName="nac"
+                  [readonly]="true"
+                  matInput
+                  placeholder="Fecha Nacimiento">
+                <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="true"></mat-datepicker-toggle>
+                <mat-datepicker #picker [disabled]="true"></mat-datepicker>
+              </mat-form-field>
+            </form>
+          </mat-card-content>
+        }
 
-                </mat-card>
-              </div>
+      </mat-card>
+    </div>
 
-              <div>
-                <mat-card appearance="outlined">
-                  <div class="cardTitle">
-                    <h2>Foto de Perfil</h2>
-                  </div>
-                  @if (user) {
-                    <mat-card-content class="pic">
-                      <img [src]="imgSrc">
-                      <div class="containerInput">
-                        @if (selectedImage) {
-                          <p> {{ selectedImage.name }} </p>
-                        }
-                        <label for="inputFile"> Seleccionar Imagen </label>
-                        <input id="inputFile" #inputFile accept="image/jpeg, .png, .gif"
-                          (change)="onChangeInput($event)"
-                          class="inputImage"
-                          type="file">
-                        </div>
-                      </mat-card-content>
-                    }
+  </div>
 
-                  </mat-card>
-                </div>
+</div>
 
-              </div>
-
-            </div>
-
-            @if (user) {
-              <toolbar
-                (guardar)="save()"
-                [desabilitarGuardar]="user.identification==null"
-                [desabilitarBorrar]="true"
-                [desabilitarBuscar]="true"
-                [desabilitarCrear]="true"
-                [desabilitarImprimir]="true"
-              ></toolbar>
-            }
+@if (form && user) {
+  <toolbar
+    (guardar)="save()"
+    [desabilitarGuardar]="user.identification==null || saving"
+    [desabilitarBorrar]="true"
+    [desabilitarBuscar]="true"
+    [desabilitarCrear]="true"
+    [desabilitarImprimir]="true"
+  ></toolbar>
+}

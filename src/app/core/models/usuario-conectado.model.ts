@@ -5,4 +5,7 @@ export interface UsuarioConectado {
   apellido: string;
   tenantId: number;
   tenantName: string;
+  idUsuario?: number;
+  idEmpresa?: number;
+  idPersonal?: number;
 }
