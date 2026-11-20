@@ -11,7 +11,6 @@ import { SystemService } from '@core/services/system/system.service';
 @Component({
   selector: 'loginForm',
   templateUrl: './form.component.html',
-  styleUrls: ['./form.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })

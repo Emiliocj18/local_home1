@@ -8,8 +8,7 @@ import {
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MaterialModule } from '../shared/material/material.module';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { ToastComponent } from '../shared/components/toast/toast.component';
 import { environment } from 'src/environments/environment';
 import { API_URL } from '../core/config/api.config';
 import { authInterceptor } from '../core/auth/auth.interceptor';
@@ -25,12 +24,12 @@ import { HttpProfileService } from '../core/services/profile/http-profile.servic
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ToastComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    MaterialModule
+    AppRoutingModule
   ],
   providers: [
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
@@ -39,21 +38,7 @@ import { HttpProfileService } from '../core/services/profile/http-profile.servic
     { provide: AuthService, useClass: HttpAuthService },
     { provide: SystemService, useClass: HttpSystemService },
     { provide: MenuService, useClass: HttpMenuService },
-    { provide: ProfileService, useClass: HttpProfileService },
-    {
-      provide: MAT_DATE_FORMATS,
-      useValue: {
-        parse: {
-          dateInput: ['l', 'LL']
-        },
-        display: {
-          dateInput: 'LL',
-          monthYearLabel: 'MMMM YYYY',
-          dateA11yLabel: 'LL',
-          monthYearA11yLabel: 'MMMM YYYY',
-        }
-      }
-    }
+    { provide: ProfileService, useClass: HttpProfileService }
   ],
   bootstrap: [AppComponent]
 })

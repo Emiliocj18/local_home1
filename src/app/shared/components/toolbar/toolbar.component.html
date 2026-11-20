@@ -1,57 +1,63 @@
-<div class="buttons mainColorText"
-  [ngStyle]="{top: (85 - offset) + 'px'}">
+<div class="buttons"
+  [ngStyle]="{ top: (85 - offset) + 'px' }">
 
   @if (mostrarCrear) {
-    <button mat-button type="button"
-      class="btn btn-default"
+    <button type="button"
+      class="tool-btn"
       (click)="emitNew()"
-      [disabled]="desabilitarCrear">
-      <i class="material-icons">note_add</i>
+      [disabled]="desabilitarCrear"
+      aria-label="Crear">
+      <span class="material-icons">note_add</span>
     </button>
   }
 
   @if (mostrarGuardar) {
-    <button mat-button type="button"
-      class="btn btn-default"
+    <button type="button"
+      class="tool-btn"
       (click)="emitSave()"
-      [disabled]="desabilitarGuardar">
-      <i class="material-icons">save</i>
+      [disabled]="desabilitarGuardar"
+      aria-label="Guardar">
+      <span class="material-icons">save</span>
     </button>
   }
 
   @if (mostrarBorrar) {
-    <button mat-button type="button"
-      class="btn btn-default"
+    <button type="button"
+      class="tool-btn"
       (click)="emitDelete()"
-      [disabled]="desabilitarBorrar">
-      <i class="material-icons">delete</i>
+      [disabled]="desabilitarBorrar"
+      aria-label="Borrar">
+      <span class="material-icons">delete</span>
     </button>
   }
 
   @if (mostrarBuscar) {
-    <button mat-button type="button"
-      class="btn btn-default"
+    <button type="button"
+      class="tool-btn"
       (click)="emitSearch()"
-      [disabled]="desabilitarBuscar">
-      <i class="material-icons">search</i>
+      [disabled]="desabilitarBuscar"
+      aria-label="Buscar">
+      <span class="material-icons">search</span>
     </button>
   }
 
   @if (mostrarImprimir) {
-    <button mat-button type="button"
-      class="btn btn-default"
+    <button type="button"
+      class="tool-btn"
       (click)="emitPrint()"
-      [disabled]="desabilitarImprimir">
-      <i class="material-icons">print</i>
+      [disabled]="desabilitarImprimir"
+      aria-label="Imprimir">
+      <span class="material-icons">print</span>
     </button>
   }
 
   @if (mostrarSalir) {
-    <button mat-button type="button"
-      class="btn btn-default"
+    <button type="button"
+      class="tool-btn"
       (click)="emitExit()"
-      [disabled]="desabilitarSalir">
-      <i class="material-icons">power_settings_new</i>
+      [disabled]="desabilitarSalir"
+      aria-label="Salir">
+      <span class="material-icons">power_settings_new</span>
     </button>
   }
 

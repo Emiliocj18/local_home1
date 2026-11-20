@@ -1,5 +1,6 @@
-import { Component, OnInit, HostListener, effect, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, HostListener, effect, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs';
 import { ModuleManagerService } from '@core/services/module-manager.service';
 import { ModuleTabRoute } from '@core/interfaces/interfaces';
 import { environment } from 'src/environments/environment';
@@ -30,6 +31,11 @@ export class AppComponent implements OnInit {
   public herramienta: MUsuarioSistema[] = [];
   public activoMenu: boolean;
   public nombre: string;
+  // Oculta el shell (header/footer) cuando se renderiza una pantalla de auth.
+  public isAuthRoute = signal(false);
+  // Sidebar móvil (overlay) y título de página dinámico para la topbar.
+  public sidebarOpen = signal(false);
+  public pageTitle = signal('Inicio');
 
   public rutas: ModuleTabRoute[] = [
     {
@@ -58,6 +64,13 @@ export class AppComponent implements OnInit {
     private auth: AuthService,
   ) {
     // La sesion vive en SessionStore; el header se sincroniza de forma reactiva.
+    this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event) => {
+        this.isAuthRoute.set(event.urlAfterRedirects.startsWith('/auth'));
+        this.pageTitle.set(this.resolveTitle(event.urlAfterRedirects));
+      });
+
     effect(() => {
       const user = this.session.user();
       const token = this.session.token();
@@ -140,6 +153,13 @@ export class AppComponent implements OnInit {
     }
     // TODO(SSO): pedir un codigo de un solo uso a Nest y abrir el modulo con
     // ?code=<code>. No volver a enviar btoa(JSON.stringify(usuario)) por la URL.
+  }
+
+  // Título de la topbar según la ruta activa.
+  private resolveTitle(url: string): string {
+    if (url.includes('/perfil')) return 'Mi perfil';
+    if (url.includes('/home')) return 'Inicio';
+    return 'Panel';
   }
 
 }

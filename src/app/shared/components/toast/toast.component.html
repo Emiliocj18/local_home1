@@ -1,0 +1,19 @@
+<div class="pointer-events-none fixed right-4 top-4 z-50 flex w-full max-w-sm flex-col gap-2">
+  @for (item of toast.toasts(); track item.id) {
+    <div class="pointer-events-auto flex items-start gap-3 rounded-2xl border px-4 py-3 text-sm shadow-card"
+      [ngClass]="item.type === 'success' ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                : item.type === 'error' ? 'border-rose-200 bg-rose-50 text-rose-700'
+                : 'border-slate-200 bg-white text-slate-700'">
+      <span class="material-icons text-[20px] leading-none">
+        {{ item.type === 'success' ? 'check_circle' : item.type === 'error' ? 'error' : 'info' }}
+      </span>
+      <p class="flex-1 leading-5">{{ item.message }}</p>
+      <button type="button"
+        class="opacity-70 transition hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        aria-label="Cerrar"
+        (click)="toast.dismiss(item.id)">
+        <span class="material-icons text-[18px] leading-none">close</span>
+      </button>
+    </div>
+  }
+</div>

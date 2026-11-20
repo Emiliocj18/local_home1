@@ -1,90 +1,51 @@
-<div class="pageContentSmall">
-
-  <div class="content">
-
-    <div>
-      <mat-card appearance="outlined">
-
-        <div class="cardTitle">
-          <h2>Información de Perfil</h2>
-        </div>
-
-        @if (loading) {
-          <mat-card-content class="flex justify-content-center loading">
-            <mat-spinner></mat-spinner>
-          </mat-card-content>
-        }
-
-        @if (error) {
-          <mat-card-content>
-            <p class="error">{{ error }}</p>
-          </mat-card-content>
-        }
-
-        @if (form && user) {
-          <mat-card-content>
-            <form [formGroup]="form">
-              <mat-form-field>
-                <input type="text"
-                  matInput
-                  [readonly]="true"
-                  [maxlength]="80"
-                  formControlName="nom"
-                  placeholder="Nombre">
-              </mat-form-field>
-              <mat-form-field>
-                <input type="text"
-                  formControlName="ape"
-                  [readonly]="true"
-                  [maxlength]="60"
-                  matInput
-                  placeholder="Apellido">
-              </mat-form-field>
-              <mat-form-field>
-                <input type="text"
-                  formControlName="tel"
-                  matInput
-                  [maxlength]="20"
-                  placeholder="Teléfono">
-                <mat-error>
-                  Campo requerido
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field>
-                <input type="text"
-                  formControlName="ema"
-                  matInput
-                  [maxlength]="100"
-                  placeholder="Email">
-                <mat-error>
-                  Campo requerido
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field>
-                <input type="text"
-                  [matDatepicker]="picker"
-                  formControlName="nac"
-                  [readonly]="true"
-                  matInput
-                  placeholder="Fecha Nacimiento">
-                <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="true"></mat-datepicker-toggle>
-                <mat-datepicker #picker [disabled]="true"></mat-datepicker>
-              </mat-form-field>
-            </form>
-          </mat-card-content>
-        }
-
-      </mat-card>
-    </div>
-
+@if (loading) {
+  <div class="flex justify-center py-16">
+    <span class="h-8 w-8 animate-spin rounded-full border-2 border-brand-500/30 border-t-brand-600" aria-hidden="true"></span>
+    <span class="sr-only">Cargando perfil…</span>
   </div>
-
-</div>
+} @else if (error) {
+  <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{{ error }}</div>
+} @else if (form && user) {
+  <section class="surface-card overflow-hidden">
+    <div class="border-b border-slate-200/80 px-5 py-4 sm:px-6">
+      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600">Cuenta</p>
+      <h2 class="mt-1 text-xl font-bold tracking-tight text-slate-900">Información de perfil</h2>
+    </div>
+    <form [formGroup]="form" class="grid gap-4 p-5 sm:p-6 sm:grid-cols-2">
+      <div>
+        <label class="label" for="nom">Nombre</label>
+        <input id="nom" type="text" class="input" [readonly]="true" [maxlength]="80" formControlName="nom" />
+      </div>
+      <div>
+        <label class="label" for="ape">Apellido</label>
+        <input id="ape" type="text" class="input" [readonly]="true" [maxlength]="60" formControlName="ape" />
+      </div>
+      <div>
+        <label class="label" for="tel">Teléfono</label>
+        <input id="tel" type="text" class="input" [maxlength]="20" formControlName="tel" />
+        @if (form.controls['tel'].invalid && form.controls['tel'].touched) {
+          <p class="mt-1 text-xs text-rose-600">Campo requerido</p>
+        }
+      </div>
+      <div>
+        <label class="label" for="ema">Email</label>
+        <input id="ema" type="text" class="input" [maxlength]="100" formControlName="ema" />
+        @if (form.controls['ema'].invalid && form.controls['ema'].touched) {
+          <p class="mt-1 text-xs text-rose-600">Campo requerido</p>
+        }
+      </div>
+      <div class="sm:col-span-2">
+        <label class="label" for="nac">Fecha de nacimiento</label>
+        <input id="nac" type="date" class="input" [readonly]="true" formControlName="nac" />
+      </div>
+    </form>
+  </section>
+}
 
 @if (form && user) {
   <toolbar
     (guardar)="save()"
-    [desabilitarGuardar]="user.identification==null || saving"
+    [desabilitarGuardar]="user.identification == null || saving"
     [desabilitarBorrar]="true"
     [desabilitarBuscar]="true"
     [desabilitarCrear]="true"

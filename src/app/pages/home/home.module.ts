@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home/home.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from '@shared/shared.module';
 import { ModuloComponent } from './home/components/modulo/modulo.component';
 
 
@@ -12,10 +10,7 @@ import { ModuloComponent } from './home/components/modulo/modulo.component';
   declarations: [HomeComponent, ModuloComponent],
   imports: [
     CommonModule,
-    HomeRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    SharedModule
+    HomeRoutingModule
   ],
   exports: [ModuloComponent]
 })

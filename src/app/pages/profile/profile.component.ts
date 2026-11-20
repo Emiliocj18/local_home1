@@ -6,10 +6,10 @@ import {
 } from '@angular/forms';
 import { MUserDetail } from '@emiliocj18/sigesp-core';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from 'src/environments/environment';
 import { Perfil } from '@core/models/perfil.model';
 import { ProfileService } from '@core/services/profile/profile.service';
+import { ToastService } from '@shared/components/toast/toast.service';
 
 @Component({
   selector: 'app-profile',
@@ -24,7 +24,7 @@ export class ProfileComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private fb: UntypedFormBuilder,
     private profileService: ProfileService,
-    private snackBar: MatSnackBar,
+    private toast: ToastService,
   ) { }
 
   public href = environment.href;
@@ -90,13 +90,11 @@ export class ProfileComponent implements OnInit {
         next: (perfil) => {
           this.applyPerfil(perfil);
           this.saving = false;
-          this.snackBar.open('Perfil actualizado exitosamente', 'Cerrar', {
-            duration: 3000,
-          });
+          this.toast.success('Perfil actualizado exitosamente');
         },
         error: (err: Error) => {
           this.saving = false;
-          this.snackBar.open(err.message, 'Cerrar', { duration: 4000 });
+          this.toast.error(err.message);
         },
       });
   }
@@ -136,19 +134,10 @@ export class ProfileComponent implements OnInit {
     this.form = this.fb.group({
       nom: [this.user.name, [Validators.required, Validators.maxLength(80)]],
       ape: [this.user.lastName, [Validators.required, Validators.maxLength(60)]],
-      nac: [this.toDate(perfil.fechaNacimiento)],
+      nac: [perfil.fechaNacimiento ?? ''],
       tel: [this.user.telephone, [Validators.required, Validators.maxLength(20)]],
       ema: [this.user.email, [Validators.required, Validators.maxLength(100)]],
     });
-  }
-
-  // Convierte 'YYYY-MM-DD' a Date local (evita el desfase de zona horaria).
-  private toDate(value: string | null): Date | null {
-    if (!value) {
-      return null;
-    }
-    const [year, month, day] = value.split('-').map(Number);
-    return new Date(year, month - 1, day);
   }
 
 }

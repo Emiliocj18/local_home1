@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MUsuarioSistema } from '@emiliocj18/sigesp-core';
 import { MenuService } from '@core/services/menu/menu.service';
 
@@ -13,10 +12,10 @@ import { MenuService } from '@core/services/menu/menu.service';
 export class HomeComponent implements OnInit {
   public menu: MUsuarioSistema[] = [];
   public activoMenu: boolean = false;
+  public error: string | null = null;
 
   constructor(
     private readonly menuService: MenuService,
-    private readonly snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
@@ -31,21 +30,11 @@ export class HomeComponent implements OnInit {
       },
       error: (error: unknown) => {
         this.activoMenu = false;
-        const message =
+        this.error =
           error instanceof Error
-            ? error.message
+            ? `Menú de sistemas: ${error.message}`
             : 'No se pudieron cargar los módulos.';
-        this.showError(`Menú de sistemas: ${message}`);
       },
-    });
-  }
-
-  private showError(message: string) {
-    this.snackBar.open(message, 'Cerrar', {
-      duration: 5000,
-      panelClass: 'sigesp-snackbar-error',
-      horizontalPosition: 'end',
-      verticalPosition: 'top',
     });
   }
 

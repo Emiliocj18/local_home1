@@ -1,26 +1,40 @@
-button{
-  border: none;
-  padding: 0  ;
-  background: none;
+:host {
+  display: block;
 }
 
-.mat-mdc-button, .mat-mdc-unelevated-button, .mat-mdc-icon-button, .mat-mdc-outlined-button{
-  padding: 5px 0px !important;
-  min-width: 45px !important;
-  border-radius: 0px !important;
-}
-
-.buttons{
+.buttons {
   display: flex;
   flex-direction: column;
-  width: 45px;
-  background: rgba(81,115,146, .3);
+  width: 48px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgb(15 23 42 / .10);
   position: fixed;
   right: 0;
-  border-top-left-radius: .25rem;
-  border-bottom-left-radius: .25rem;
+  border-top-left-radius: 0.75rem;
+  border-bottom-left-radius: 0.75rem;
   overflow: hidden;
-  transition-duration: .2s;
-  transition-property: all;
-  transition-timing-function: ease-out;
+  z-index: 30;
+}
+
+.tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 44px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #1d4ed8;
+  cursor: pointer;
+  transition: background 0.2s ease-out, color 0.2s ease-out;
+
+  &:hover:not(:disabled) {
+    background: rgba(37, 99, 235, 0.08);
+  }
+
+  &:disabled {
+    color: #cbd5e1;
+    cursor: not-allowed;
+  }
 }

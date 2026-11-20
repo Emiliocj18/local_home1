@@ -1,75 +1,188 @@
-/* Estilos globales de la aplicacion */
-@import "@angular/material/prebuilt-themes/indigo-pink.css";
+/* ==========================================================================
+   Estilos globales — SIGESP ERP Home
+   Estrategia: Tailwind 4 (sin preflight) + tokens de marca (navy/brand/accent)
+   + primitivas globales (ver @layer components).
 
-@font-face {
-  font-family: 'Fira Sans';
-  src: url(assets/fonts/FiraSans-Regular.ttf);
+   REGLA DE EQUIPO (migración localNewStyle):
+     - Features propias (login, shell, home, perfil, toolbar) = 100% Tailwind.
+       Prohibido el uso de `mat-*` en estas pantallas.
+     - Angular Material queda solo como dependencia peer del core
+       (@emiliocj18/sigesp-core). Si en el futuro se renderiza un componente
+       del core que use Material, añadir aquí un tema M3 de marca.
+   ========================================================================== */
+
+// --- Tailwind 4 sin preflight --------------------------------------------
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@source "./src/**/*.{html,ts}";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-navy-950: #050d1f;
+  --color-navy-900: #071630;
+  --color-navy-800: #0b2144;
+
+  --color-brand-50:  #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+
+  --color-accent-100: #cffafe;
+  --color-accent-300: #67e8f9;
+  --color-accent-400: #22d3ee;
+  --color-accent-500: #06b6d4;
+
+  --shadow-card: 0 1px 2px rgb(15 23 42 / .05), 0 10px 30px rgb(15 23 42 / .06);
+  --shadow-glass: 0 30px 90px rgb(2 6 23 / .55);
+
+  /* semánticos */
+  --color-success: #16a34a;
+  --color-warning: #f59e0b;
+  --color-danger: #dc2626;
+
+  --tracking-eyebrow: 0.22em;
+  --radius-control: 0.75rem;
 }
 
-body{
+// --- Tipografía base -------------------------------------------------------
+html, body { height: 100%; }
+body {
   margin: 0;
   background: #ffffff;
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-*{ 
-  font-family: 'Fira Sans', sans-serif;
+// --- Primitivas de componente (Pool) --------------------------------------
+@layer components {
+  .sigesp-grid {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 34px 34px;
+  }
+
+  .glass-panel {
+    @apply rounded-3xl border border-white/10 bg-white/10 backdrop-blur-xl;
+    box-shadow: var(--shadow-glass);
+  }
+
+  .surface-card {
+    @apply rounded-2xl border border-slate-200/80 bg-white;
+    box-shadow: var(--shadow-card);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5
+      text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500
+      focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200
+      bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition
+      hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus-visible:ring-2
+      focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed
+      disabled:opacity-60;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm
+      font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-900
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm
+      text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400
+      focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed
+      disabled:bg-slate-50 disabled:text-slate-400;
+  }
+
+  .label {
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-2.5 py-1
+      text-[11px] font-semibold text-brand-700 ring-1 ring-inset ring-brand-600/10;
+  }
+
+  .badge-neutral {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1
+      text-[11px] font-semibold text-slate-600 ring-1 ring-inset ring-slate-500/10;
+  }
+
+  .nav-link {
+    @apply flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium
+      text-slate-300 transition hover:bg-white/10 hover:text-white;
+  }
+
+  .nav-link-active {
+    @apply bg-white/10 text-white;
+  }
+
+  .icon-tile {
+    @apply grid h-10 w-10 shrink-0 place-items-center rounded-xl;
+  }
 }
 
-.mainColor{
- // background: #073763 ;
+// ==========================================================================
+// Clases legacy del shell/home (Material). Se conservan hasta la Parte 2.
+// ==========================================================================
+.mainColor {
   color: white;
   background: linear-gradient(45deg, rgba(2,0,36,1) 0%, rgba(15,45,115,0.95) 50%, rgba(8,8,8,1) 100%);
   background-size: cover;
-  -moz-background-size: cover;
-  -webkit-background-size: cover;
-  -o-background-size: cover;
 }
 
-.mainColorText{
+.mainColorText {
   color: #073763 !important;
-  background: white !important;;
+  background: white !important;
 }
 
-.secondaryColor{
-  background: #094d8c ;
+.secondaryColor {
+  background: #094d8c;
   color: white;
 }
 
-.title{
+.title {
   font-weight: 600;
   font-size: 18px;
 }
 
-.flex{
+.flex {
   display: flex;
   flex-wrap: wrap;
 }
 
-.justify-content-center{
+.justify-content-center {
   justify-content: center;
 }
 
-.align-items-center{
+.align-items-center {
   align-items: center;
 }
 
-html, body { height: 100%; }
-
-.pageContent{
+.pageContent {
   padding: 15px 60px;
 }
 
-.pageContentSmall{
+.pageContentSmall {
   padding: 15px 60px 15px 15px;
 }
 
-.cardTitle{
+.cardTitle {
   @extend .secondaryColor;
   margin: -16px -16px 16px !important;
   padding: 16px;
   border-radius: 5px 5px 0px 0px;
   text-align: center;
-  h2{
+  h2 {
     margin: 0;
   }
 }
