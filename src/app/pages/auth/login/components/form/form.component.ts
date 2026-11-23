@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SessionRefreshService } from '@core/auth/session-refresh.service';
@@ -23,6 +23,21 @@ export class FormComponent implements OnInit {
   public loaded: boolean = false;
   public showError: boolean = false;
   public sending: boolean = false;
+  public open: boolean = false;
+  public activeIndex: number = -1;
+
+  public get selectedId(): string {
+    return String(this.loginForm?.get('connectionId')?.value ?? '');
+  }
+
+  public get selectedSystemName(): string {
+    return this.systems.find((system) => system.id === this.selectedId)?.name ?? 'Seleccione una empresa';
+  }
+
+  public get activeId(): string | null {
+    const system = this.systems[this.activeIndex];
+    return this.open && system ? `connection-option-${system.id}` : null;
+  }
 
   constructor(
     private authService: AuthService,
@@ -31,6 +46,7 @@ export class FormComponent implements OnInit {
     private session: SessionStore,
     private refresh: SessionRefreshService,
     private router: Router,
+    private host: ElementRef<HTMLElement>,
   ) { }
 
   ngOnInit() {
@@ -53,6 +69,99 @@ export class FormComponent implements OnInit {
         this.loaded = true;
       }
     });
+  }
+
+  public toggle(): void {
+    if (this.open) {
+      this.close();
+    } else {
+      this.openList();
+    }
+  }
+
+  public openList(): void {
+    this.open = true;
+    const index = this.systems.findIndex((system) => system.id === this.selectedId);
+    this.activeIndex = index >= 0 ? index : 0;
+  }
+
+  public close(): void {
+    this.open = false;
+  }
+
+  public select(system: System): void {
+    const control = this.loginForm.get('connectionId');
+    control?.setValue(system.id);
+    control?.markAsTouched();
+    this.close();
+  }
+
+  public onKeydown(event: KeyboardEvent): void {
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        if (this.open) {
+          this.move(1);
+        } else {
+          this.openList();
+        }
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        if (this.open) {
+          this.move(-1);
+        } else {
+          this.openList();
+        }
+        break;
+      case 'Home':
+        if (!this.open) return;
+        event.preventDefault();
+        this.activeIndex = 0;
+        break;
+      case 'End':
+        if (!this.open) return;
+        event.preventDefault();
+        this.activeIndex = this.systems.length - 1;
+        break;
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        if (this.open) {
+          this.selectActive();
+        } else {
+          this.openList();
+        }
+        break;
+      case 'Escape':
+        if (!this.open) return;
+        event.preventDefault();
+        this.close();
+        break;
+      case 'Tab':
+        this.close();
+        break;
+    }
+  }
+
+  @HostListener('document:pointerdown', ['$event'])
+  public onDocumentPointerDown(event: PointerEvent): void {
+    if (this.open && !this.host.nativeElement.contains(event.target as Node)) {
+      this.close();
+    }
+  }
+
+  private move(step: number): void {
+    if (!this.systems.length) return;
+    const next = this.activeIndex + step;
+    this.activeIndex = next < 0 ? this.systems.length - 1 : next >= this.systems.length ? 0 : next;
+  }
+
+  private selectActive(): void {
+    const system = this.systems[this.activeIndex];
+    if (system) {
+      this.select(system);
+    }
   }
 
   public login() {

@@ -1,60 +1,111 @@
 @if (loaded) {
-  <form class="mt-8 space-y-5" [formGroup]="loginForm" (ngSubmit)="login()">
+  <form class="mt-6 space-y-4" [formGroup]="loginForm" (ngSubmit)="login()">
     <div>
-      <label class="label text-slate-300" for="connectionId">Empresa</label>
-      <select id="connectionId"
-        class="input border-white/10 bg-white/10 text-white focus:border-accent-400 focus:ring-accent-400/20"
-        formControlName="connectionId">
-        @for (system of systems; track system) {
-          <option [value]="system.id">{{ system.name }}</option>
+      <label class="label mb-1 text-[11px] font-medium normal-case tracking-normal text-slate-400" for="connectionId">Empresa</label>
+      <div class="relative">
+        <button type="button" id="connectionId"
+          role="combobox" aria-haspopup="listbox"
+          [attr.aria-expanded]="open"
+          [attr.aria-controls]="open ? 'connection-listbox' : null"
+          [attr.aria-activedescendant]="activeId"
+          class="input flex h-10 w-full cursor-pointer items-center justify-between gap-2 rounded-lg border-white/10 bg-glass-field py-0 pl-3.5 pr-3.5 text-left text-sm text-white focus:border-accent-400 focus:ring-1 focus:ring-accent-400/20"
+          (click)="toggle()"
+          (keydown)="onKeydown($event)">
+          <span class="truncate">{{ selectedSystemName }}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            class="h-3.5 w-3.5 shrink-0 text-slate-400 transition-transform duration-200"
+            [class.rotate-180]="open" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+          </svg>
+        </button>
+
+        @if (open) {
+          <ul id="connection-listbox" role="listbox"
+            class="absolute z-20 mb-0 mt-1 max-h-56 w-full list-none overflow-y-auto rounded-lg border border-slate-200 bg-white px-0 py-1 text-slate-900 shadow-xl">
+            @for (system of systems; track system.id; let i = $index) {
+              <li role="option" [id]="'connection-option-' + system.id"
+                [attr.aria-selected]="system.id === selectedId"
+                class="cursor-pointer px-3.5 py-2 text-sm transition-colors duration-200 ease-out hover:bg-navy-900 hover:text-white"
+                [class.bg-navy-900]="activeIndex === i"
+                [class.text-white]="activeIndex === i"
+                [class.font-semibold]="system.id === selectedId"
+                (mouseenter)="activeIndex = i"
+                (mousedown)="$event.preventDefault()"
+                (click)="select(system)">
+                {{ system.name }}
+              </li>
+            }
+          </ul>
         }
-      </select>
+      </div>
     </div>
 
     @if (systemsError) {
-      <p class="text-xs text-rose-300">{{ systemsError }}</p>
+      <p class="m-0 text-[11px] text-rose-300">{{ systemsError }}</p>
     }
 
     <div>
-      <label class="label text-slate-300" for="usuario">Usuario</label>
+      <label class="label mb-1 text-[11px] font-medium normal-case tracking-normal text-slate-400" for="usuario">Usuario</label>
       <input id="usuario" type="text" autocomplete="username"
-        class="input border-white/10 bg-white/10 text-white placeholder:text-slate-400 focus:border-accent-400 focus:ring-accent-400/20"
+        class="input h-10 rounded-lg border-white/10 bg-glass-field px-3.5 py-0 text-sm text-white placeholder:text-slate-500 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/20 **focus:bg-glass-field**"
         formControlName="usuario" />
       @if (!loginForm.controls['usuario'].valid && loginForm.controls['usuario'].touched) {
-        <p class="mt-1 text-xs text-rose-300">Debe ingresar nombre de usuario.</p>
+        <p class="mb-0 mt-1 text-[11px] text-rose-300">Debe ingresar nombre de usuario.</p>
       }
     </div>
 
     <div>
-      <label class="label text-slate-300" for="clave">Contraseña</label>
+      <label class="label mb-1 text-[11px] font-medium normal-case tracking-normal text-slate-400" for="clave">Contraseña</label>
       <div class="relative">
         <input id="clave" [type]="hide ? 'password' : 'text'" autocomplete="current-password"
-          class="input border-white/10 bg-white/10 pr-20 text-white placeholder:text-slate-400 focus:border-accent-400 focus:ring-accent-400/20"
+          class="input h-10 rounded-lg border-white/10 bg-glass-field py-0 pl-3.5 pr-10 text-sm text-white placeholder:text-slate-500 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/20"
           formControlName="clave" />
         <button type="button"
-          class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg px-2 py-1 text-xs font-semibold text-slate-300 transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
+          class="absolute right-1 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-md border-0 bg-transparent text-slate-400 transition hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
           [attr.aria-label]="hide ? 'Mostrar contraseña' : 'Ocultar contraseña'"
           [attr.aria-pressed]="!hide"
           (click)="hide = !hide">
-          {{ hide ? 'Ver' : 'Ocultar' }}
+          @if (hide) {
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              class="h-4 w-4" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          } @else {
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              class="h-4 w-4" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+            </svg>
+          }
         </button>
       </div>
       @if (!loginForm.controls['clave'].valid && loginForm.controls['clave'].touched) {
-        <p class="mt-1 text-xs text-rose-300">Debe ingresar la contraseña.</p>
+        <p class="mb-0 mt-1 text-[11px] text-rose-300">Debe ingresar la contraseña.</p>
       }
     </div>
 
     @if (showError) {
-      <div class="rounded-2xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">{{ mensaje }}</div>
+      <div class="rounded-xl border border-rose-400/30 bg-rose-500/10 px-3 py-2.5 text-[13px] text-rose-200">{{ mensaje }}</div>
     }
 
-    <button type="submit" class="btn-primary w-full" [disabled]="!loginForm.valid || sending">
-      {{ sending ? 'Validando…' : 'Entrar' }}
-    </button>
+    <div class="flex justify-center">
+      <button type="submit"
+        class="btn-primary h-10 w-40 rounded-lg shadow-md ring-1 ring-inset ring-white/15 transition duration-200 hover:bg-brand-500 hover:shadow-glow-brand disabled:hover:bg-brand-600 disabled:hover:shadow-md"
+        [disabled]="!loginForm.valid || sending">
+        @if (sending) {
+          <span class="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden="true"></span>
+          Validando…
+        } @else {
+          Ingresar
+        }
+      </button>
+    </div>
   </form>
 } @else {
-  <div class="flex justify-center py-12">
-    <span class="h-8 w-8 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden="true"></span>
+  <div class="flex justify-center py-10">
+    <span class="h-6 w-6 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden="true"></span>
     <span class="sr-only">Cargando empresas…</span>
   </div>
 }
