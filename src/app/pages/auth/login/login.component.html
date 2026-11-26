@@ -1,12 +1,20 @@
-<div class="grid1">  
-    <div class="loginPage">        
-    </div>  
-  <div class="loginPanel">
-    <div class="font"><h3>Bienvenidos a</h3></div>
-    <div class="font2"><h1>SIGESP ERP v.3.0</h1></div>    
-    <loginForm></loginForm>
-  </div>
+<div class="relative min-h-screen overflow-hidden bg-navy-950 text-white">
+  <img src="assets/images/fondo-sigesp.webp" alt="" aria-hidden="true"
+    fetchpriority="high"
+    class="pointer-events-none absolute inset-0 h-full w-full object-cover" />
+  <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-navy-950/45 via-navy-950/60 to-navy-950/80"></div>
+
+  <main class="relative flex min-h-screen w-full items-center justify-center px-6 py-10
+               lg:justify-end lg:px-16 xl:px-24">
+    <section class="w-full max-w-sm">
+      <div class="glass-panel w-full rounded-2xl bg-navy-950/55 p-6 sm:p-7">
+        <div class="text-center">
+          <h1 class="m-0 text-xl font-semibold tracking-tight">Bienvenido</h1>
+          <p class="mb-0 mt-1.5 text-[13px] text-slate-300">Ingrese sus credenciales</p>
+        </div>
+
+        <loginForm></loginForm>
+      </div>
+    </section>
+  </main>
 </div>
-
-
-

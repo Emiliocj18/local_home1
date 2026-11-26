@@ -1,4 +1,10 @@
-<div class="modulo" (click)="abrirModulo()">
-  <mat-icon class="mainColorText"> {{ icono }} </mat-icon>
-  <h6> {{ nombre }} </h6>
+<div class="surface-card group flex h-full cursor-pointer flex-col items-center justify-between p-5 text-center transition hover:border-brand-500 hover:shadow-card focus-within:ring-2 focus-within:ring-brand-500"
+  (click)="abrirModulo()"
+  role="button"
+  tabindex="0"
+  [attr.aria-label]="nombre">
+  <span class="grid h-16 w-16 place-items-center rounded-2xl bg-brand-50 text-brand-700">
+    <span class="material-icons text-[40px]">{{ icono }}</span>
+  </span>
+  <h6 class="mt-4 text-sm font-semibold text-slate-700">{{ nombre }}</h6>
 </div>

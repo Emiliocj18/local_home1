@@ -1,27 +1,28 @@
+@if (error) {
+  <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{{ error }}</div>
+}
 
-<div class="home">
-  <mat-accordion >
-    <div *ngIf="activoMenu">
-    <mat-expansion-panel [expanded]="true">
-        <mat-expansion-panel-header>
-          <mat-panel-title class="title">
-            <div class="flex align-items-center tituloModulo">
-              <mat-icon class="mainColorText">assessment</mat-icon> Módulos del Sistema
-            </div>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
+<section class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+  <div>
+    <p class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600">Sistemas</p>
+    <h2 class="mt-2 text-2xl font-bold tracking-tight text-slate-900">Módulos del sistema</h2>
+    <p class="mt-1 max-w-2xl text-sm leading-6 text-slate-500">Acceda a los módulos disponibles para su cuenta.</p>
+  </div>
+</section>
 
-        <div class="listaModulo">       
-          <div *ngFor="let menu1 of menu">
-            <modulo [nombre]="menu1.nombreSistema"
-            [icono]="menu1.imagenSistema"
-            [ruta]="menu1.ruta"></modulo>
-          </div>          
-        </div>     
-
-    </mat-expansion-panel>
-    </div>
-  </mat-accordion>
-
-</div>
-
+@if (activoMenu) {
+  <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    @for (menu1 of menu; track menu1) {
+      <modulo [nombre]="menu1.nombreSistema"
+        [icono]="menu1.imagenSistema"
+        [ruta]="menu1.ruta"></modulo>
+    }
+  </div>
+} @else if (!error) {
+  <div class="flex flex-col items-center justify-center px-6 py-14 text-center">
+    <span class="grid h-14 w-14 place-items-center rounded-2xl bg-brand-50 text-brand-600">
+      <span class="material-icons">hourglass_empty</span>
+    </span>
+    <h3 class="mt-4 text-sm font-bold text-slate-900">Cargando módulos…</h3>
+  </div>
+}

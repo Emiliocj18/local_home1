@@ -1,95 +1,143 @@
-import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
-import { MUserDetail, SigespService, MUsuario } from 'sigesp';
-//import { MUsuario } from '@core/models/usuario.model';
-import { LocalService } from '@core/services/sigesp.service'
-import { AuthService } from '@core/services/auth.service';
-import { environment } from 'src/environments/environment';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MUserDetail } from '@emiliocj18/sigesp-core';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
-import { AppComponent } from 'src/app/app/app.component';
+import { environment } from 'src/environments/environment';
+import { Perfil } from '@core/models/perfil.model';
+import { ProfileService } from '@core/services/profile/profile.service';
+import { ToastService } from '@shared/components/toast/toast.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  styleUrls: ['./profile.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
 })
 export class ProfileComponent implements OnInit {
 
   constructor(
     private sanitizer: DomSanitizer,
-    private auth: AuthService,
-    private local: LocalService,
     private fb: UntypedFormBuilder,
-    private _app: AppComponent,
-    private sigesp: SigespService
+    private profileService: ProfileService,
+    private toast: ToastService,
   ) { }
+
   public href = environment.href;
-  public showPassword: boolean = false;
-  public showPasswordVer: boolean = false;
   public form: UntypedFormGroup = null;
   public user: MUserDetail = null;
   public baseSrc: string = '';
-  public imgSrc: SafeResourceUrl = '';
+  public imgSrc: SafeResourceUrl | string = '';
   public selectedImage: File = null;
   public srcBase64: string = null;
+  public loading: boolean = false;
+  public saving: boolean = false;
+  public error: string = '';
 
   ngOnInit() {
-    this.baseSrc = environment.production ?   
-      this.href + '/assets/foto_personal/':   
+    this.baseSrc = environment.production ?
+      this.href + '/assets/foto_personal/':
       environment.url + '/assets/foto_personal/';
 
-    this.auth.getUserById(this.local.usuario.id).subscribe(res => {
-      this.user = res.data 
-      this.imgSrc = this.baseSrc + this.user.photo
-      this.form = this.fb.group({
-        nom: [this.user.name, [Validators.required, Validators.maxLength(80)]],
-        ape: [this.user.lastName, [Validators.required, Validators.maxLength(60)]],
-        nac: [this.user.birthday, [Validators.required]],
-        tel: [this.user.telephone, [Validators.required, Validators.maxLength(20)]],
-        ema: [this.user.email, [Validators.required, Validators.maxLength(100)]],
-      })
-    })
+    this.load();
   }
 
-  public onChangeInput(evt) {
-    const image = evt.target.files;
-
-    if (image.length > 0) {
-      for (let i = 0, f; f = image[i]; i++) {
-        if (!f.type.match('image.*')) {
-          continue;
-        }
-        this.selectedImage = image[0];
-        var format: string = this.selectedImage.type.replace('image/', '');
-        this.user.photo = `${this.user.identification}.${format}`
-        let reader = new FileReader();
-        reader.onload = (e: any) => {
-          this.srcBase64 = e.target.result;
-        }
-        reader.readAsDataURL(this.selectedImage);
-        this.imgSrc = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.selectedImage))
-      }
+  public onChangeInput(evt: any) {
+    // La foto esta en standby; el guard evita el TypeError si se reactiva.
+    if (!this.user) {
+      return;
     }
-  }
 
-  public save(){
-   
-    if(this.user.identification != null){
-          this.auth.updateUser(this.form,  this.user, 
-        this.srcBase64
-      ).subscribe(res => {
-        this.user = res.data;
-        var user: MUsuario = this.local.usuario; 
-        user.foto = this.user.photo;
-        user.nombre = `${this.user.name} ${this.user.lastName}`;
-        this.local.guardarUsuario(user);
-        this._app.guardarUsuario(user)
-        this.sigesp.showToastSuccess("Perfil actualizado exitosamente");
-      })
+    const files: FileList = evt.target.files;
+
+    if (files.length === 0) {
+      return;
     }
-   
+
+    const image = files[0];
+
+    if (!image.type.match('image.*')) {
+      return;
+    }
+
+    this.selectedImage = image;
+    const format = image.type.replace('image/', '');
+    this.user.photo = `${this.user.identification}.${format}`;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.srcBase64 = e.target.result;
+    };
+    reader.readAsDataURL(image);
+    this.imgSrc = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(image));
   }
 
-   
+  public save() {
+    if (!this.user || !this.form || this.form.invalid || this.saving) {
+      return;
+    }
+
+    const values = this.form.getRawValue();
+
+    this.saving = true;
+    this.profileService
+      .updateProfile({ telefono: values.tel, email: values.ema })
+      .subscribe({
+        next: (perfil) => {
+          this.applyPerfil(perfil);
+          this.saving = false;
+          this.toast.success('Perfil actualizado exitosamente');
+        },
+        error: (err: Error) => {
+          this.saving = false;
+          this.toast.error(err.message);
+        },
+      });
+  }
+
+  private load() {
+    this.loading = true;
+    this.error = '';
+
+    this.profileService.getProfile().subscribe({
+      next: (perfil) => {
+        this.applyPerfil(perfil);
+        this.loading = false;
+      },
+      error: (err: Error) => {
+        this.error = err.message;
+        this.loading = false;
+      },
+    });
+  }
+
+  private applyPerfil(perfil: Perfil) {
+    this.user = new MUserDetail();
+    this.user.id = perfil.idUsuario;
+    this.user.idEnterprise = perfil.idEmpresa;
+    this.user.id_personal = perfil.idPersonal;
+    this.user.username = perfil.codusu;
+    this.user.name = perfil.nombre;
+    this.user.lastName = perfil.apellido;
+    this.user.identification = perfil.cedula;
+    this.user.cedula = perfil.cedula;
+    this.user.email = perfil.email ?? '';
+    this.user.telephone = perfil.telefono ?? '';
+    this.user.birthday = perfil.fechaNacimiento ?? '';
+    this.user.photo = perfil.foto ?? '';
+    this.imgSrc = this.user.photo ? this.baseSrc + this.user.photo : '';
+
+    this.form = this.fb.group({
+      nom: [this.user.name, [Validators.required, Validators.maxLength(80)]],
+      ape: [this.user.lastName, [Validators.required, Validators.maxLength(60)]],
+      nac: [perfil.fechaNacimiento ?? ''],
+      tel: [this.user.telephone, [Validators.required, Validators.maxLength(20)]],
+      ema: [this.user.email, [Validators.required, Validators.maxLength(100)]],
+    });
+  }
 
 }

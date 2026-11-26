@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main, prueba1, "migracion/**"]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+          scope: "@emiliocj18"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npx ng test --watch=false
+
+      - name: Build
+        run: npm run build

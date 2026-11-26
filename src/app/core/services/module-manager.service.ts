@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ModuleTab, ModuleTabRoute } from '@core/interfaces/interfaces';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -39,22 +38,16 @@ export class ModuleManagerService {
     })
   }
 
+  // TODO-MIGRACION: solo cierra pestañas; ya no limpia storage (la sesion vive en memoria).
   public closeAll(){
-   
+
     this.tabs.forEach(e => {
-      if (!e.win.closed) {      
-        e.win.location.href = e.href + '/auth/close';  
+      if (!e.win.closed) {
+        e.win.location.href = e.href + '/auth/close';
       } else {
         e.win = window.open(e.href + '/auth/close', '_blank')
       }
-      if (environment.production) {
-        e.win.sessionStorage.clear();
-        e.win.localStorage.clear();
-
-      }
     });
-  
-      
 
     this.tabs = [];
   }
