@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ModuleTab, ModuleTabRoute } from '@core/interfaces/interfaces';
+import { ModuleOpenResult, ModuleTab, ModuleTabRoute } from '@core/interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -8,45 +8,39 @@ export class ModuleManagerService {
 
   private tabs: ModuleTab[] = [];
 
-  constructor() { }
+  // Única puerta de apertura de módulos. No registra nada si el popup se bloquea.
+  public addTab(tab: ModuleTabRoute): ModuleOpenResult {
+    const href = (tab.href ?? tab.url).replace(/\/$/, '');
+    const existing = this.tabs.find((open) => open.name === tab.name);
 
-  public addTab(newTab: ModuleTabRoute){
-
-    const index = this.tabs.findIndex(e => {
-      return (e.name == newTab.name)
-    })
-
-    if (index >= 0) {
-      if (this.tabs[index].win.closed) {
-        this.tabs.splice(index, 1)
-        this.pushTab(newTab)
-      } else {
-        this.tabs[index].win.focus();
-      }
-    } else {
-      this.pushTab(newTab)
+    if (existing && !existing.win.closed) {
+      existing.win.focus();
+      return 'focused';
     }
+
+    // Una pestaña cerrada deja de ser válida: se reemplaza su registro.
+    if (existing) {
+      this.tabs = this.tabs.filter((open) => open.name !== tab.name);
+    }
+
+    const win = window.open(tab.url, '_blank');
+    if (!win) {
+      return 'blocked';
+    }
+
+    // Se anula el opener sin perder la referencia que usa closeAll().
+    win.opener = null;
+    this.tabs.push({ name: tab.name, win, href });
+    return 'opened';
   }
 
-  private pushTab(newTab: ModuleTabRoute){
-    const tab = window.open(newTab.url, '_blank')
-    tab.focus()
-    this.tabs.push({
-      name: newTab.name,
-      win: tab,
-      href: newTab.href
-    })
-  }
+  // Cierre local de cada módulo registrado. Tolera pestañas cerradas o sin href.
+  public closeAll(): void {
+    this.tabs.forEach((tab) => {
+      if (!tab.href) return;
+      if (!tab.win || tab.win.closed) return;
 
-  // TODO-MIGRACION: solo cierra pestañas; ya no limpia storage (la sesion vive en memoria).
-  public closeAll(){
-
-    this.tabs.forEach(e => {
-      if (!e.win.closed) {
-        e.win.location.href = e.href + '/auth/close';
-      } else {
-        e.win = window.open(e.href + '/auth/close', '_blank')
-      }
+      tab.win.location.href = `${tab.href}/auth/close`;
     });
 
     this.tabs = [];

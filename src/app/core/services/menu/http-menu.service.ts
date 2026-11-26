@@ -1,8 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable, TimeoutError, catchError, map, throwError, timeout } from 'rxjs';
-import { MUsuarioSistema, IUsuarioSistema } from '@emiliocj18/sigesp-core';
 import { API_URL } from '@core/config/api.config';
+import { IModuloSistemaDto, ModuloSistema } from '@core/models/modulo-sistema.model';
 import { MenuService } from './menu.service';
 
 const REQUEST_TIMEOUT_MS = 10000;
@@ -16,14 +16,14 @@ export class HttpMenuService extends MenuService {
     super();
   }
 
-  getMenu(): Observable<MUsuarioSistema[]> {
+  getMenu(): Observable<ModuloSistema[]> {
     return this.http
-      .get<IUsuarioSistema[]>(`${this.apiUrl}/queries/sss/sistemas`, {
+      .get<IModuloSistemaDto[]>(`${this.apiUrl}/queries/sss/sistemas`, {
         withCredentials: true,
       })
       .pipe(
         timeout(REQUEST_TIMEOUT_MS),
-        map((items) => items.map((item) => new MUsuarioSistema(item))),
+        map((items) => items.map((item) => new ModuloSistema(item))),
         catchError((error: unknown) =>
           throwError(() => new Error(this.errorMessage(error))),
         ),

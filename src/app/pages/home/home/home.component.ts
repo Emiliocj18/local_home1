@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MUsuarioSistema } from '@emiliocj18/sigesp-core';
+import { ModuloSistema } from '@core/models/modulo-sistema.model';
 import { MenuService } from '@core/services/menu/menu.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { MenuService } from '@core/services/menu/menu.service';
   standalone: false
 })
 export class HomeComponent implements OnInit {
-  public menu: MUsuarioSistema[] = [];
+  public menu: ModuloSistema[] = [];
   public activoMenu: boolean = false;
   public error: string | null = null;
 

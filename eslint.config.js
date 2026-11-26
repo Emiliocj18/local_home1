@@ -31,6 +31,17 @@ module.exports = tseslint.config(
     },
   },
   {
+    // La apertura de módulos pasa solo por ModuleManagerService.addTab().
+    files: ['**/*.ts'],
+    ignores: ['src/app/core/services/module-manager.service.ts'],
+    rules: {
+      'no-restricted-syntax': ['error', {
+        selector: "CallExpression[callee.object.name='window'][callee.property.name='open']",
+        message: 'Usa ModuleManagerService.addTab()',
+      }],
+    },
+  },
+  {
     files: ['**/*.html'],
     extends: [...angular.configs.templateRecommended],
     rules: {

@@ -35,6 +35,9 @@ export interface ModuleTab{
   href: string
 }
 
+// Resultado de abrir un módulo: nueva pestaña, ya estaba abierta o popup bloqueado.
+export type ModuleOpenResult = 'opened' | 'focused' | 'blocked';
+
 export interface ModuleTabRoute{
   name: string,
   icon?: string,

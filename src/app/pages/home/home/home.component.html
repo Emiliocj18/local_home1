@@ -12,10 +12,12 @@
 
 @if (activoMenu) {
   <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-    @for (menu1 of menu; track menu1) {
-      <modulo [nombre]="menu1.nombreSistema"
-        [icono]="menu1.imagenSistema"
-        [ruta]="menu1.ruta"></modulo>
+    @for (menu1 of menu; track menu1.codigo) {
+      <modulo [codigo]="menu1.codigo"
+        [nombre]="menu1.nombre"
+        [icono]="menu1.icono"
+        [url]="menu1.url"
+        [href]="menu1.url"></modulo>
     }
   </div>
 } @else if (!error) {

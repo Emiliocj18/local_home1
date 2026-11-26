@@ -1,5 +1,10 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { ModuleManagerService } from '@core/services/module-manager.service';
+import { ToastService } from '@shared/components/toast/toast.service';
+
+const MANTENIMIENTO = 'Lo sentimos, el módulo se encuentra en mantenimiento.';
+const POPUP_BLOQUEADO =
+  'No se pudo abrir el módulo. Habilite las ventanas emergentes del navegador.';
 
 @Component({
   selector: 'modulo',
@@ -9,18 +14,36 @@ import { environment } from 'src/environments/environment';
   standalone: false
 })
 export class ModuloComponent {
-  @Input() public nombre: string = null;
-  @Input() public icono: string = null;
-  @Input() public ruta: string = null;
+  @Input() public codigo: string = '';
+  @Input() public nombre: string = '';
+  @Input() public icono: string = '';
+  @Input() public url: string | null = null;
+  @Input() public href: string | null = null;
 
-  // TODO(SSO): reactivar cuando existan los modulos destino.
-  // Requiere GET /auth/session + POST /auth/handoff/exchange en Nest.
-  // NO volver a enviar btoa(JSON.stringify(usuario)) por la URL.
-  public abrirModulo(): void {
-    if (!environment.ssoEnabled) {
-      return;
-    }
-    // Flujo nuevo: pedir un codigo de un solo uso y abrir el modulo con ?code=.
+  constructor(
+    private readonly moduleManager: ModuleManagerService,
+    private readonly toast: ToastService,
+  ) {}
+
+  public get mantenimiento(): boolean {
+    return this.url === null;
   }
 
+  // La tarjeta no conoce window.open: solo delega y traduce el resultado.
+  public abrirModulo(): void {
+    if (this.url === null) {
+      this.toast.show(MANTENIMIENTO, 'info');
+      return;
+    }
+
+    const result = this.moduleManager.addTab({
+      name: this.codigo,
+      url: this.url,
+      href: this.href ?? this.url,
+    });
+
+    if (result === 'blocked') {
+      this.toast.error(POPUP_BLOQUEADO);
+    }
+  }
 }

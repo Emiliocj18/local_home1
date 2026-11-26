@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
-import { MUsuarioSistema } from '@emiliocj18/sigesp-core';
+import { ModuloSistema } from '@core/models/modulo-sistema.model';
 
 // Contrato del menú de sistemas del usuario autenticado (home).
 export abstract class MenuService {
-  abstract getMenu(): Observable<MUsuarioSistema[]>;
+  abstract getMenu(): Observable<ModuloSistema[]>;
 }
